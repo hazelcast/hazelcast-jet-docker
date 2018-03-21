@@ -24,11 +24,12 @@ fi
 # trap the signal and delegate to sigterm_handler function, which will notify jet instance process
 trap sigterm_handler SIGTERM SIGINT
 
-export CLASSPATH=$JET_HOME/hazelcast-jet-$JET_VERSION.jar:$CLASSPATH/*
+export CLASSPATH=$JET_HOME/hazelcast-jet-$JET_VERSION.jar:$JET_HOME/hazelcast-aws-$HZ_AWS_VERSION.jar:$CLASSPATH/*
 
 echo "########################################"
 echo "# RUN_JAVA=$RUN_JAVA"
 echo "# JAVA_OPTS=$JAVA_OPTS"
+echo "# CLASSPATH=$CLASSPATH"
 echo "# starting now...."
 echo "########################################"
 
