@@ -9,8 +9,10 @@ ADD https://repo1.maven.org/maven2/com/hazelcast/jet/hazelcast-jet/$JET_VERSION/
 # Download hazelcast-aws jars from maven repo.
 ADD https://repo1.maven.org/maven2/com/hazelcast/hazelcast-aws/$HZ_AWS_VERSION/hazelcast-aws-$HZ_AWS_VERSION.jar $JET_HOME
 ADD server.sh /$JET_HOME/server.sh
+ADD submit.sh /$JET_HOME/submit.sh
 ADD stop.sh /$JET_HOME/stop.sh
 RUN chmod +x /$JET_HOME/server.sh
+RUN chmod +x /$JET_HOME/submit.sh
 RUN chmod +x /$JET_HOME/stop.sh
 # Start hazelcast standalone server.
 CMD ["./server.sh"]
