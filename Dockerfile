@@ -1,5 +1,5 @@
 FROM openjdk:8-jre
-ENV JET_VERSION 0.5
+ENV JET_VERSION 0.6
 ENV HZ_AWS_VERSION 2.1.0
 ENV JET_HOME /opt/hazelcast-jet/
 RUN mkdir -p $JET_HOME
