@@ -7,11 +7,6 @@ sigterm_handler() {
   fi
 }
 
-PRG="$0"
-PRGDIR=`dirname "$PRG"`
-JET_HOME=`cd "$PRGDIR/.." >/dev/null; pwd`/hazelcast-jet
-PID_FILE=$JET_HOME/jet_instance.pid
-
 if [ "x$MIN_HEAP_SIZE" != "x" ]; then
 	JAVA_OPTS="$JAVA_OPTS -Xms${MIN_HEAP_SIZE}"
 fi
@@ -24,7 +19,7 @@ fi
 # trap the signal and delegate to sigterm_handler function, which will notify jet instance process
 trap sigterm_handler SIGTERM SIGINT
 
-export CLASSPATH=$JET_HOME/hazelcast-jet-$JET_VERSION.jar:$JET_HOME/hazelcast-aws-$HZ_AWS_VERSION.jar:$CLASSPATH/*
+export CLASSPATH=$CLASSPATH_DEFAULT:$CLASSPATH/*
 
 echo "########################################"
 echo "# RUN_JAVA=$RUN_JAVA"
@@ -35,9 +30,6 @@ echo "########################################"
 
 java -server $JAVA_OPTS com.hazelcast.jet.server.StartServer &
 PID="$!"
-echo "Process id ${PID} for jet instance is written to location: " $PID_FILE
-echo ${PID} > ${PID_FILE}
-
 # wait on jet instance process
 wait ${PID}
 # if a signal came up, remove previous traps on signals and wait again (noop if process stopped already)
