@@ -65,10 +65,8 @@ ENV JAVA_OPTS ""
 
 ADD server.sh /$JET_HOME/server.sh
 ADD submit.sh /$JET_HOME/submit.sh
-ADD stop.sh /$JET_HOME/stop.sh
 RUN chmod +x /$JET_HOME/server.sh
 RUN chmod +x /$JET_HOME/submit.sh
-RUN chmod +x /$JET_HOME/stop.sh
 
 ### Expose port
 EXPOSE 5701
