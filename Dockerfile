@@ -1,7 +1,7 @@
 FROM openjdk:8u171-jre-alpine
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
-ARG JET_VERSION=0.7
+ARG JET_VERSION=0.8-SNAPSHOT
 ARG CACHE_API_VERSION=1.0.0
 ARG HZ_KUBE_VERSION=1.2
 ARG HZ_EUREKA_VERSION=1.0.2
@@ -21,10 +21,6 @@ RUN apk add --no-cache bash curl \
 RUN mkdir -p ${JET_HOME}
 WORKDIR ${JET_HOME}
 
-# Download & install Hazelcast Jet
-RUN curl -svf -o ${JET_HOME}/${JET_JAR} \
-         -L https://repo1.maven.org/maven2/com/hazelcast/jet/hazelcast-jet/${JET_VERSION}/${JET_JAR}
-
 # Download & install Hazelcast AWS Module
 RUN curl -svf -o ${JET_HOME}/${HZ_AWS_API_JAR} \
          -L https://repo1.maven.org/maven2/com/hazelcast/hazelcast-aws/${HZ_AWS_VERSION}/${HZ_AWS_API_JAR}
@@ -33,7 +29,7 @@ RUN curl -svf -o ${JET_HOME}/${HZ_AWS_API_JAR} \
 RUN curl -svf -o ${JET_HOME}/${CACHE_API_JAR} \
          -L https://repo1.maven.org/maven2/javax/cache/cache-api/${CACHE_API_VERSION}/${CACHE_API_JAR}
 
-# Download and install Hazelcast plugins (hazelcast-kubernetes and hazelcast-eureka) with dependencies
+# Download and install Hazelcast Jet and Hazelcast plugins (hazelcast-kubernetes and hazelcast-eureka) with dependencies
 # Use Maven Wrapper to fetch dependencies specified in mvnw/dependency-copy.xml
 RUN curl -svf -o ${JET_HOME}/maven-wrapper.tar.gz \
          -L https://github.com/takari/maven-wrapper/archive/maven-wrapper-0.3.0.tar.gz \
@@ -45,6 +41,7 @@ RUN cd mvnw \
  && chmod +x mvnw \
  && sync \
  && ./mvnw -f dependency-copy.xml \
+           -Dhazelcast-jet-version=${JET_VERSION} \
            -Dhazelcast-kubernetes-version=${HZ_KUBE_VERSION} \
            -Dhazelcast-eureka-version=${HZ_EUREKA_VERSION} \
            dependency:copy-dependencies \
