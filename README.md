@@ -1,4 +1,4 @@
-# Hazelcast Jet Docker Image
+# Hazelcast Jet Docker Images
 
 [Hazelcast Jet](http://jet.hazelcast.org) is a distributed computing
 platform built for high-performance stream processing and fast batch
@@ -8,13 +8,31 @@ a lightweight package of a processor and a scalable in-memory storage.
 Visit [Hazelcast Jet Website](http://jet.hazelcast.org) to learn more
 about the architecture and use-cases.
 
-## Quick Start
+## Hazelcast Jet Quick Start
 
 For the simplest end-to-end scenario, you can create a Hazelcast Jet cluster with two Docker containers and access it from the client application.
 
 ```
 $ docker run -e JAVA_OPTS="-Dhazelcast.local.publicAddress=<host_ip>:5701" -p 5701:5701 hazelcast/hazelcast-jet
 $ docker run -e JAVA_OPTS="-Dhazelcast.local.publicAddress=<host_ip>:5702" -p 5702:5701 hazelcast/hazelcast-jet
+```
+
+Note that:
+* each container must publish the `5701` port under a different host machine port (`5701` and `5702` in the example)
+* `<host_ip>` needs to be the host machine address that will be used for the Hazelcast communication
+
+After setting up the cluster, you can start the client application to check it works correctly.
+
+## Hazelcast Jet Enterprise Quick Start
+
+For the simplest end-to-end scenario, you can create a Hazelcast Jet Enterprise cluster with two Docker containers and access it from the client application.
+
+Please request trial license [here](https://hazelcast.com/hazelcast-enterprise-download/) or contact sales@hazelcast.com.
+
+
+```
+$ docker run -e JET_LICENSE_KEY=<your_license_key> -e JAVA_OPTS="-Dhazelcast.local.publicAddress=<host_ip>:5701" -p 5701:5701 hazelcast/hazelcast-jet-enterprise
+$ docker run -e JET_LICENSE_KEY=<your_license_key> -e JAVA_OPTS="-Dhazelcast.local.publicAddress=<host_ip>:5702" -p 5702:5701 hazelcast/hazelcast-jet-enterprise
 ```
 
 Note that:
