@@ -1,7 +1,7 @@
 FROM openjdk:8u171-jre-alpine
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
-ARG JET_VERSION=0.7.1
+ARG JET_VERSION=0.7.2
 ARG CACHE_API_VERSION=1.0.0
 ARG HZ_KUBE_VERSION=1.2
 ARG HZ_EUREKA_VERSION=1.0.2
