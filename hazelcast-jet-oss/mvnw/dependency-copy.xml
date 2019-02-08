@@ -42,8 +42,8 @@
       <version>${hazelcast-eureka-version}</version>
       <exclusions>
         <exclusion>
-	  <groupId>com.hazelcast</groupId>
-	  <artifactId>hazelcast</artifactId>
+          <groupId>com.hazelcast</groupId>
+          <artifactId>hazelcast</artifactId>
 	      </exclusion>
       </exclusions>
     </dependency>
@@ -53,9 +53,31 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.10</version>
+        <version>3.1.1</version>
         <configuration>
-          <outputDirectory>${env.JET_HOME}</outputDirectory>
+          <outputDirectory>${env.JET_HOME}/lib</outputDirectory>
+          <artifactItems>
+            <artifactItem>
+              <groupId>com.hazelcast.jet</groupId>
+              <artifactId>hazelcast-jet-distribution</artifactId>
+              <version>${hazelcast-jet-version}</version>
+              <type>zip</type>
+              <outputDirectory>${env.JET_HOME}</outputDirectory>
+              <includes>**/*.sh</includes>
+              <excludes>META-INF/</excludes>
+              <overWrite>true</overWrite>
+            </artifactItem>
+            <artifactItem>
+              <groupId>com.hazelcast.jet</groupId>
+              <artifactId>hazelcast-jet-distribution</artifactId>
+              <version>${hazelcast-jet-version}</version>
+              <type>zip</type>
+              <outputDirectory>${env.JET_HOME}</outputDirectory>
+              <includes>**/*.xml</includes>
+              <excludes>META-INF/</excludes>
+              <overWrite>true</overWrite>
+            </artifactItem>
+          </artifactItems>
         </configuration>
       </plugin>
     </plugins>
