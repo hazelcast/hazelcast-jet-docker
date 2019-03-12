@@ -8,7 +8,7 @@ pipeline {
 	stage('Building image') {
       steps{
         script {
-          ossImage = docker.build(ossRegistry + ":latest-snapshot", "--no-cache --build-arg JET_VERSION=$JET_VERSION ./hazelcast-jet-oss" )
+          ossImage = docker.build(ossRegistry + ":latest-snapshot", "--rm --no-cache --build-arg JET_VERSION=$JET_VERSION ./hazelcast-jet-oss" )
         }
       }
     }
