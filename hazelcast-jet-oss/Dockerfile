@@ -1,11 +1,11 @@
-FROM openjdk:8u171-jre-alpine
+FROM openjdk:8u201-jre-alpine
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
-ARG JET_VERSION=3.0-SNAPSHOT
-ARG CACHE_API_VERSION=1.0.0
-ARG HZ_KUBE_VERSION=1.3.1
-ARG HZ_EUREKA_VERSION=1.0.2
-ARG HZ_AWS_VERSION=2.1.0
+ARG JET_VERSION=3.1-SNAPSHOT
+ARG CACHE_API_VERSION=1.1.0
+ARG HZ_KUBE_VERSION=1.4
+ARG HZ_EUREKA_VERSION=1.1.1
+ARG HZ_AWS_VERSION=2.4
 
 # Build constants
 ARG JET_HOME="/opt/hazelcast-jet"
@@ -41,7 +41,6 @@ RUN cd mvnw \
  && chmod +x mvnw \
  && sync \
  && ./mvnw -f dependency-copy.xml \
-           -Dhazelcast-jet-version=${JET_VERSION} \
            -Dhazelcast-kubernetes-version=${HZ_KUBE_VERSION} \
            -Dhazelcast-eureka-version=${HZ_EUREKA_VERSION} \
            -Dhazelcast-jet-version=${JET_VERSION} \
@@ -51,8 +50,8 @@ RUN cd mvnw \
  && rm -rf $JET_HOME/mvnw \
  && rm -rf ~/.m2 \
  && chmod -R +r $JET_HOME \
- && mv $JET_HOME/hazelcast-jet-$JET_VERSION/* $JET_HOME/ \ 
- && rm -rf $JET_HOME/hazelcast-jet-$JET_VERSION 
+ && mv $JET_HOME/hazelcast-jet-$JET_VERSION/* $JET_HOME/ \
+ && rm -rf $JET_HOME/hazelcast-jet-$JET_VERSION
 
 
 # Runtime constants
@@ -73,10 +72,10 @@ EXPOSE 5701
 CMD ["bash", "-c", "set -euo pipefail \
       && eval JAVA_OPTS=\\\"${JAVA_OPTS}\\\" \
       && eval CLASSPATH=\\\"${CLASSPATH}\\\" \
-      && if [[ \"x${CLASSPATH}\" != \"x\" ]]; then export CLASSPATH=\"${CLASSPATH_DEFAULT}:${CLASSPATH}\"; else export CLASSPATH=\"${CLASSPATH_DEFAULT}\"; fi \
-      && if [[ \"x${JAVA_OPTS}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT} ${JAVA_OPTS}\"; else export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT}\"; fi \
-      && if [[ \"x${MIN_HEAP_SIZE}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS} -Xms${MIN_HEAP_SIZE}\"; fi \
-      && if [[ \"x${MAX_HEAP_SIZE}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS} -Xmx${MAX_HEAP_SIZE}\"; fi \
+      && if [[ \"x${CLASSPATH}\" != \"x\" ]]; then export CLASSPATH=\"${CLASSPATH}:${CLASSPATH_DEFAULT}\"; else export CLASSPATH=\"${CLASSPATH_DEFAULT}\"; fi \
+      && if [[ \"x${JAVA_OPTS}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS} ${JAVA_OPTS_DEFAULT}\"; else export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT}\"; fi \
+      && if [[ \"x${MIN_HEAP_SIZE}\" != \"x\" ]]; then export JAVA_OPTS=\"-Xms${MIN_HEAP_SIZE} ${JAVA_OPTS}\"; fi \
+      && if [[ \"x${MAX_HEAP_SIZE}\" != \"x\" ]]; then export JAVA_OPTS=\"-Xmx${MAX_HEAP_SIZE} ${JAVA_OPTS} \"; fi \
       && echo \"########################################\" \
       && echo \"# JAVA_OPTS=${JAVA_OPTS}\" \
       && echo \"# CLASSPATH=${CLASSPATH}\" \
