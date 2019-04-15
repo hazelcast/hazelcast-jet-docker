@@ -30,14 +30,17 @@ RUN curl -svf -o ${JET_HOME}/${JET_ZIP} \
          -x ${JET_INSTALL_NAME}/code-samples/* \
          -x ${JET_INSTALL_NAME}/demo/* \
          -x ${JET_INSTALL_NAME}/docs/* \
- && rm -rf ${JET_ZIP}
+ && rm -rf ${JET_ZIP} \
+ && mv $JET_HOME/${JET_INSTALL_NAME}/* $JET_HOME/ \ 
+ && rm -rf $JET_HOME/${JET_INSTALL_NAME}/ 
+
 
 # Download & install Hazelcast AWS Module
-RUN curl -svf -o ${JET_HOME}/${HZ_AWS_API_JAR} \
+RUN curl -svf -o ${JET_HOME}/lib/${HZ_AWS_API_JAR} \
          -L https://repo1.maven.org/maven2/com/hazelcast/hazelcast-aws/${HZ_AWS_VERSION}/${HZ_AWS_API_JAR}
 
 # Download & install JCache
-RUN curl -svf -o ${JET_HOME}/${CACHE_API_JAR} \
+RUN curl -svf -o ${JET_HOME}/lib/${CACHE_API_JAR} \
          -L https://repo1.maven.org/maven2/javax/cache/cache-api/${CACHE_API_VERSION}/${CACHE_API_JAR}
 
 # Download and install Hazelcast plugins (hazelcast-kubernetes and hazelcast-eureka) with dependencies
@@ -54,6 +57,7 @@ RUN cd mvnw \
  && ./mvnw -f dependency-copy.xml \
            -Dhazelcast-kubernetes-version=${HZ_KUBE_VERSION} \
            -Dhazelcast-eureka-version=${HZ_EUREKA_VERSION} \
+           -Dhazelcast-jet-version=${JET_VERSION} \
            dependency:copy-dependencies \
  && cd .. \
  && rm -rf $JET_HOME/mvnw \
@@ -61,7 +65,7 @@ RUN cd mvnw \
  && chmod -R +r $JET_HOME
 
 # Runtime constants
-ENV CLASSPATH_DEFAULT "${JET_HOME}:${JET_HOME}/*:${JET_HOME}/${JET_INSTALL_NAME}/lib/${JET_JAR}"
+ENV CLASSPATH_DEFAULT "${JET_HOME}:${JET_HOME}/*:${JET_HOME}/lib:${JET_HOME}/lib/*"
 ENV JAVA_OPTS_DEFAULT "-Djava.net.preferIPv4Stack=true"
 
 # Runtime environment variables
@@ -70,14 +74,27 @@ ENV MAX_HEAP_SIZE ""
 ENV CLASSPATH ""
 ENV JAVA_OPTS ""
 ENV JET_LICENSE_KEY ""
-
-ADD server.sh /$JET_HOME/server.sh
-ADD submit.sh /$JET_HOME/submit.sh
-RUN chmod +x /$JET_HOME/server.sh
-RUN chmod +x /$JET_HOME/submit.sh
+ENV JET_LICENCE_KEY ""
+ENV PATH $JET_HOME/bin:$PATH
 
 ### Expose port
 EXPOSE 5701
 
 # Start Hazelcast Jet server
-CMD ["./server.sh"]
+CMD ["bash", "-c", "set -euo pipefail \
+      && eval JAVA_OPTS=\\\"${JAVA_OPTS}\\\" \
+      && eval CLASSPATH=\\\"${CLASSPATH}\\\" \
+      && if [[ \"x${CLASSPATH}\" != \"x\" ]]; then export CLASSPATH=\"${CLASSPATH_DEFAULT}:${CLASSPATH}\"; else export CLASSPATH=\"${CLASSPATH_DEFAULT}\"; fi \
+      && if [[ \"x${JAVA_OPTS}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT} ${JAVA_OPTS}\"; else export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT}\"; fi \
+      && if [[ \"x${MIN_HEAP_SIZE}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS} -Xms${MIN_HEAP_SIZE}\"; fi \
+      && if [[ \"x${MAX_HEAP_SIZE}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS} -Xmx${MAX_HEAP_SIZE}\"; fi \
+      && if [[ \"x${JET_LICENSE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS} -Dhazelcast.enterprise.license.key=${JET_LICENSE_KEY}\"; fi \
+      && if [[ \"x${JET_LICENCE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS} -Dhazelcast.enterprise.license.key=${JET_LICENCE_KEY}\"; fi \
+      && echo \"########################################\" \
+      && echo \"# JAVA_OPTS=${JAVA_OPTS}\" \
+      && echo \"# CLASSPATH=${CLASSPATH}\" \
+      && echo \"# starting now....\" \
+      && echo \"########################################\" \
+      && set -x \
+      && exec java -server ${JAVA_OPTS} com.hazelcast.jet.server.StartServer \
+     "]
