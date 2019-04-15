@@ -8,7 +8,7 @@ ARG HZ_EUREKA_VERSION=1.0.2
 ARG HZ_AWS_VERSION=2.1.0
 
 # Build constants
-ARG JET_HOME="/opt/hazelcast-jet"
+ARG JET_HOME="/opt/hazelcast-jet-enterprise"
 ARG JET_INSTALL_NAME="hazelcast-jet-enterprise-${JET_VERSION}"
 ARG JET_JAR="hazelcast-jet-enterprise-${JET_VERSION}.jar"
 ARG JET_ZIP="hazelcast-jet-enterprise-${JET_VERSION}.zip"
