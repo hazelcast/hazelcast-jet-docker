@@ -38,7 +38,7 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.1.1</version>
         <configuration>
-          <outputDirectory>${env.JET_HOME}/lib</outputDirectory>
+          <outputDirectory>${env.JET_HOME}/dependencies</outputDirectory>
         </configuration>
       </plugin>
     </plugins>

@@ -20,7 +20,7 @@ RUN apk add --no-cache bash curl \
  && rm -rf /var/cache/apk/*
 
 # Set up build directory
-RUN mkdir -p ${JET_HOME}
+RUN mkdir -p ${JET_HOME}/dependencies
 WORKDIR ${JET_HOME}
 
 # Download & install Hazelcast Jet
@@ -36,11 +36,11 @@ RUN curl -svf -o ${JET_HOME}/${JET_ZIP} \
 
 
 # Download & install Hazelcast AWS Module
-RUN curl -svf -o ${JET_HOME}/lib/${HZ_AWS_API_JAR} \
+RUN curl -svf -o ${JET_HOME}/dependencies/${HZ_AWS_API_JAR} \
          -L https://repo1.maven.org/maven2/com/hazelcast/hazelcast-aws/${HZ_AWS_VERSION}/${HZ_AWS_API_JAR}
 
 # Download & install JCache
-RUN curl -svf -o ${JET_HOME}/lib/${CACHE_API_JAR} \
+RUN curl -svf -o ${JET_HOME}/dependencies/${CACHE_API_JAR} \
          -L https://repo1.maven.org/maven2/javax/cache/cache-api/${CACHE_API_VERSION}/${CACHE_API_JAR}
 
 # Download and install Hazelcast plugins (hazelcast-kubernetes and hazelcast-eureka) with dependencies
@@ -65,7 +65,7 @@ RUN cd mvnw \
  && chmod -R +r $JET_HOME
 
 # Runtime constants
-ENV CLASSPATH_DEFAULT "${JET_HOME}:${JET_HOME}/*:${JET_HOME}/lib:${JET_HOME}/lib/*"
+ENV CLASSPATH_DEFAULT "${JET_HOME}/lib/${JET_JAR}:${JET_HOME}/dependencies:${JET_HOME}/dependencies/*"
 ENV JAVA_OPTS_DEFAULT "-Djava.net.preferIPv4Stack=true"
 
 # Runtime environment variables
