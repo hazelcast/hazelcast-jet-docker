@@ -86,6 +86,18 @@ If you have custom jars or files to put into classpath of docker container, you 
 $ docker run -e CLASSPATH="/opt/hazelcast-jet/CLASSPATH_EXT/" -v PATH_TO_LOCAL_CONFIG_FOLDER:/opt/hazelcast-jet/CLASSPATH_EXT hazelcast/hazelcast-jet
 ```
 
+### LOGGING_LEVEL
+
+The logging level can be changed using the `LOGGING_LEVEL` variable, for example, to see the `FINEST` logs.
+
+```
+$ docker run -e LOGGING_LEVEL=FINEST hazelcast/hazelcast-jet
+```
+
+Available logging levels are (from highest to lowest): `SEVERE`, `WARNING`, `INFO`, `CONFIG`, `FINE`, `FINER`, and `FINEST`. The default logging level is `INFO`.
+
+Note that if you need some more custom logging configuration, you can configure the `logging.properties` file and build your own Hazelcast Jet image.
+
 ## Hazelcast Jet Management Center
 
 Please see [Hazelcast Jet Management Center Repository](https://github.com/hazelcast/hazelcast-jet-management-center-docker) for Dockerfile definitions and have a look at available images on [Docker Hub](https://store.docker.com/community/images/hazelcast/hazelcast-jet-management-center) page.

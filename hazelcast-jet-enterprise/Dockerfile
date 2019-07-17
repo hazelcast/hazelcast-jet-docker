@@ -64,9 +64,11 @@ RUN cd mvnw \
  && rm -rf ~/.m2 \
  && chmod -R +r $JET_HOME
 
+COPY logging.properties ${JET_HOME}/logging.properties
+
 # Runtime constants
-ENV CLASSPATH_DEFAULT "${JET_HOME}/lib/${JET_JAR}:${JET_HOME}/dependencies:${JET_HOME}/dependencies/*"
-ENV JAVA_OPTS_DEFAULT "-Djava.net.preferIPv4Stack=true"
+ENV CLASSPATH_DEFAULT "${JET_HOME}:${JET_HOME}/lib/${JET_JAR}:${JET_HOME}/dependencies:${JET_HOME}/dependencies/*"
+ENV JAVA_OPTS_DEFAULT "-Djava.net.preferIPv4Stack=true -Djava.util.logging.config.file=${JET_HOME}/logging.properties"
 
 # Runtime environment variables
 ENV MIN_HEAP_SIZE ""
@@ -76,6 +78,7 @@ ENV JAVA_OPTS ""
 ENV JET_LICENSE_KEY ""
 ENV JET_LICENCE_KEY ""
 ENV PATH $JET_HOME/bin:$PATH
+ENV LOGGING_LEVEL ""
 
 ### Expose port
 EXPOSE 5701
@@ -90,6 +93,7 @@ CMD ["bash", "-c", "set -euo pipefail \
       && if [[ \"x${MAX_HEAP_SIZE}\" != \"x\" ]]; then export JAVA_OPTS=\"-Xmx${MAX_HEAP_SIZE} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${JET_LICENSE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"-Dhazelcast.enterprise.license.key=${JET_LICENSE_KEY} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${JET_LICENCE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"-Dhazelcast.enterprise.license.key=${JET_LICENCE_KEY} ${JAVA_OPTS} \"; fi \
+      && if [[ \"x${LOGGING_LEVEL}\" != \"x\" ]]; then sed -i \"s/java.util.logging.ConsoleHandler.level = INFO/java.util.logging.ConsoleHandler.level = ${LOGGING_LEVEL}/g;s/.level= INFO/.level= ${LOGGING_LEVEL}/g\" logging.properties; fi \
       && echo \"########################################\" \
       && echo \"# JAVA_OPTS=${JAVA_OPTS}\" \
       && echo \"# CLASSPATH=${CLASSPATH}\" \
