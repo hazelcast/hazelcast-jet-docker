@@ -98,6 +98,29 @@ Available logging levels are (from highest to lowest): `SEVERE`, `WARNING`, `INF
 
 Note that if you need some more custom logging configuration, you can configure the `logging.properties` file and build your own Hazelcast Jet image.
 
+### Managing and Monitoring
+
+You can use JMX or Prometheus for the application monitoring.
+
+#### JMX
+
+You can use the standard JMX protocol to monitor your Hazelcast Jet instance. Start Hazelcast Jet container with the following parameters.
+
+```
+$ docker run -p 9999:9999 -e JAVA_OPTS='-Dhazelcast.jmx=true -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false' hazelcast/hazelcast-jet
+```
+Now you can connect using the address: `localhost:9999`.
+
+#### Prometheus
+
+You can use JMX Prometheus agent and expose JVM and JMX Hazelcast Jet metrics.
+
+```
+$ docker run -p 8080:8080 -e PROMETHEUS_PORT=8080 hazelcast/hazelcast-jet
+```
+
+Then, the metrics are available at: `http://localhost:8080/metrics`. Note that you can add also `-e JAVA_OPTS='-Dhazelcast.jmx=true'` to expose JMX via Prometheus (otherwise just JVM metrics are visible).
+
 ## Hazelcast Jet Management Center
 
 Please see [Hazelcast Jet Management Center Repository](https://github.com/hazelcast/hazelcast-jet-management-center-docker) for Dockerfile definitions and have a look at available images on [Docker Hub](https://store.docker.com/community/images/hazelcast/hazelcast-jet-management-center) page.
