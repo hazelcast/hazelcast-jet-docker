@@ -7,7 +7,7 @@ The Docker Compose file (`hazelcast.yml`) contains two services `hazelcast-jet` 
 - `hazelcast-jet` - This image starts plain Hazelcast Jet Member.
 - `hazelcast-jet-submit` - This image starts the Hazelcast Jet Bootstrap application which submits a Jet computation job that was packaged in a self-contained JAR file to the Hazelcast Jet Cluster via Hazelcast Jet Client.
 
-We will use `TradingVolume` code sample to show the details of packaging it into fat-jar and submitting it to the Hazelcast Jet Cluster. More information about the `TradingVolume` code sample can be found on [Rolling Aggregation](../../rolling-aggregation/src/main/java/TradingVolume.java).
+We will use `TradingVolume` code sample to show the details of packaging it into fat-jar and submitting it to the Hazelcast Jet Cluster. More information about the `TradingVolume` code sample can be found on [Rolling Aggregation](./src/main/java/TradingVolume.java).
 
 ## Directory Level Structure
 At the highest level, the source code is organized into following directories
