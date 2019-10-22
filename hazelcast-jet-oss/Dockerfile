@@ -1,11 +1,11 @@
 FROM openjdk:8u201-jre-alpine
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
-ARG JET_VERSION=3.2-SNAPSHOT
+ARG JET_VERSION=4.0-SNAPSHOT
 ARG CACHE_API_VERSION=1.1.0
-ARG HZ_KUBE_VERSION=1.5
-ARG HZ_EUREKA_VERSION=1.1.1
-ARG HZ_AWS_VERSION=2.4
+ARG HZ_KUBE_VERSION=2.0
+ARG HZ_EUREKA_VERSION=1.1.2
+ARG HZ_AWS_VERSION=3.0
 ARG JMX_PROMETHEUS_AGENT_VERSION=0.11.0
 
 # Build constants
@@ -95,5 +95,5 @@ CMD ["bash", "-c", "set -euo pipefail \
       && echo \"# starting now....\" \
       && echo \"########################################\" \
       && set -x \
-      && exec java -server ${JAVA_OPTS} com.hazelcast.jet.server.StartServer \
+      && exec java -server ${JAVA_OPTS} com.hazelcast.jet.server.JetMemberStarter \
      "]
