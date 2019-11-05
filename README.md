@@ -43,14 +43,6 @@ After setting up the cluster, you can start the client application to check it w
 
 ## Hazelcast Jet Defined Environment Variables
 
-### MAX_HEAP_SIZE
-
-You can give environment variables to the Hazelcast Jet member within your Docker command. Currently, we support the variables  `MIN_HEAP_SIZE` and `MAX_HEAP_SIZE` inside our start script. An example command is as follows:
-
-```
-$ docker run -e MIN_HEAP_SIZE="1g" hazelcast/hazelcast-jet
-```
-
 ### JAVA_OPTS
 
 As shown below, you can use `JAVA_OPTS` environment variable if you need to pass multiple VM arguments to your Hazelcast Jet member.
@@ -96,7 +88,11 @@ $ docker run -e LOGGING_LEVEL=FINEST hazelcast/hazelcast-jet
 
 Available logging levels are (from highest to lowest): `SEVERE`, `WARNING`, `INFO`, `CONFIG`, `FINE`, `FINER`, and `FINEST`. The default logging level is `INFO`.
 
-Note that if you need some more custom logging configuration, you can configure the `logging.properties` file and build your own Hazelcast Jet image.
+Note that if you need more custom logging configuration, you can configure your own `log4j.properties` file by mounting it into your container like below:
+
+```
+$ docker run -e JAVA_OPTS="-Dlog4j.configuration=file:/opt/hazelcast-jet/ext-logging-config/log4j.properties" -v PATH_TO_LOCAL_CONFIG_FOLDER:/opt/azelcast-jet/ext-logging-config hazelcast/hazelcast-jet
+```
 
 ### Managing and Monitoring
 
