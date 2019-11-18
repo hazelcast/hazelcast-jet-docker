@@ -16,6 +16,7 @@ data:
             service-name: hazelcast-jet-service
   hazelcast-client.yaml: |-
     hazelcast-client:
+      cluster-name: jet
       network:
         kubernetes:
           enabled: true

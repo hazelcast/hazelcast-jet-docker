@@ -45,11 +45,11 @@ public class TradingVolume {
 
     private static Pipeline buildPipeline() {
         Pipeline p = Pipeline.create();
-        p.drawFrom(tradeSource(NUMBER_OF_TICKERS, TRADES_PER_SEC))
+        p.readFrom(tradeSource(NUMBER_OF_TICKERS, TRADES_PER_SEC))
          .withoutTimestamps()
          .groupingKey(Trade::getTicker)
          .rollingAggregate(summingLong(Trade::getPrice))
-         .drainTo(Sinks.map(VOLUME_MAP_NAME));
+         .writeTo(Sinks.map(VOLUME_MAP_NAME));
         return p;
     }
 
