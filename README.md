@@ -130,4 +130,4 @@ Please see [Hazelcast Jet Management Center Repository](https://github.com/hazel
 
 Hazelcast Jet Management Center is prepared to work in the Kubernetes environment. For details, please check:
 
-* [Hazelcast Jet Kubernetes Code Sample](examples)
+* [Hazelcast Jet Kubernetes Code Sample](examples/kubernetes)
