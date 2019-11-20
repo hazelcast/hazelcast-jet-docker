@@ -75,7 +75,12 @@ plugins for Maven and Gradle and as a Java library.
 You might need to add your docker registry credentials to Jib plugin
 configuration section or if you'd like to use your local registry,
 please update [lifecycle binding](https://github.com/GoogleContainerTools/jib/tree/master/jib-maven-plugin#bind-to-a-lifecycle)
- goal to `dockerBuild`  from `build` in the `pom.xml`.
+goal to `dockerBuild`  from `build` in the `pom.xml`. If you are using `minikube`
+you'll need to run this command to set docker environment.
+
+```bash
+eval $(minikube docker-env)
+```
 
 Then, build the `rolling-aggregation` code sample with the command below:
 
