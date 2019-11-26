@@ -78,8 +78,6 @@ ENV JAVA_OPTS_DEFAULT "-Djava.net.preferIPv4Stack=true -Djava.util.logging.confi
 
 # Runtime environment variables
 ENV JET_HOME $JET_HOME
-ENV MIN_HEAP_SIZE ""
-ENV MAX_HEAP_SIZE ""
 ENV CLASSPATH ""
 ENV JAVA_OPTS ""
 ENV JET_LICENSE_KEY ""
@@ -97,9 +95,7 @@ CMD ["bash", "-c", "set -euo pipefail \
       && eval JAVA_OPTS=\\\"${JAVA_OPTS}\\\" \
       && eval CLASSPATH=\\\"${CLASSPATH}\\\" \
       && if [[ \"x${CLASSPATH}\" != \"x\" ]]; then export CLASSPATH=\"${CLASSPATH}:${CLASSPATH_DEFAULT}\"; else export CLASSPATH=\"${CLASSPATH_DEFAULT}\"; fi \
-      && if [[ \"x${JAVA_OPTS}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS} ${JAVA_OPTS_DEFAULT}\"; else export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT}\"; fi \
-      && if [[ \"x${MIN_HEAP_SIZE}\" != \"x\" ]]; then export JAVA_OPTS=\"-Xms${MIN_HEAP_SIZE} ${JAVA_OPTS}\"; fi \
-      && if [[ \"x${MAX_HEAP_SIZE}\" != \"x\" ]]; then export JAVA_OPTS=\"-Xmx${MAX_HEAP_SIZE} ${JAVA_OPTS} \"; fi \
+      && if [[ \"x${JAVA_OPTS}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT} ${JAVA_OPTS}\"; else export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT}\"; fi \
       && if [[ \"x${PROMETHEUS_PORT}\" != \"x\" ]]; then export JAVA_OPTS=\"-javaagent:${JET_HOME}/dependencies/jmx_prometheus_javaagent.jar=${PROMETHEUS_PORT}:${PROMETHEUS_CONFIG} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${JET_LICENSE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"-Dhazelcast.enterprise.license.key=${JET_LICENSE_KEY} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${JET_LICENCE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"-Dhazelcast.enterprise.license.key=${JET_LICENCE_KEY} ${JAVA_OPTS} \"; fi \

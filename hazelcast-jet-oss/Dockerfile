@@ -68,7 +68,7 @@ CMD ["bash", "-c", "set -euo pipefail \
       && eval JAVA_OPTS=\\\"${JAVA_OPTS}\\\" \
       && eval CLASSPATH=\\\"${CLASSPATH}\\\" \
       && if [[ \"x${CLASSPATH}\" != \"x\" ]]; then export CLASSPATH=\"${CLASSPATH}:${CLASSPATH_DEFAULT}\"; else export CLASSPATH=\"${CLASSPATH_DEFAULT}\"; fi \
-      && if [[ \"x${JAVA_OPTS}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS} ${JAVA_OPTS_DEFAULT}\"; else export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT}\"; fi \
+      && if [[ \"x${JAVA_OPTS}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT} ${JAVA_OPTS}\"; else export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT}\"; fi \
       && if [[ \"x${PROMETHEUS_PORT}\" != \"x\" ]]; then export JAVA_OPTS=\"-javaagent:${JET_HOME}/lib/jmx_prometheus_javaagent.jar=${PROMETHEUS_PORT}:${PROMETHEUS_CONFIG} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${LOGGING_LEVEL}\" != \"x\" ]]; then sed -i \"s/log4j.logger.com.hazelcast.jet=info/log4j.logger.com.hazelcast.jet=${LOGGING_LEVEL}/g;s/log4j.rootLogger=info/log4j.rootLogger=${LOGGING_LEVEL}/g\" $JET_HOME/config/log4j.properties; fi \
       && echo \"########################################\" \
