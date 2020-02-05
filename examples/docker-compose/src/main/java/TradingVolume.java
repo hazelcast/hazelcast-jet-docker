@@ -19,7 +19,6 @@ import com.hazelcast.jet.JetInstance;
 import com.hazelcast.jet.config.JobConfig;
 import com.hazelcast.jet.pipeline.Pipeline;
 import com.hazelcast.jet.pipeline.Sinks;
-import com.hazelcast.jet.server.JetBootstrap;
 import support.Trade;
 
 import static com.hazelcast.jet.aggregate.AggregateOperations.summingLong;
@@ -45,16 +44,16 @@ public class TradingVolume {
 
     private static Pipeline buildPipeline() {
         Pipeline p = Pipeline.create();
-        p.drawFrom(tradeSource(NUMBER_OF_TICKERS, TRADES_PER_SEC))
+        p.readFrom(tradeSource(NUMBER_OF_TICKERS, TRADES_PER_SEC))
          .withoutTimestamps()
          .groupingKey(Trade::getTicker)
          .rollingAggregate(summingLong(Trade::getPrice))
-         .drainTo(Sinks.map(VOLUME_MAP_NAME));
+         .writeTo(Sinks.map(VOLUME_MAP_NAME));
         return p;
     }
 
     public static void main(String[] args) {
-        JetInstance jet = JetBootstrap.getInstance();
+        JetInstance jet = Jet.bootstrappedInstance();
 
 
         startConsolePrinterThread(jet, VOLUME_MAP_NAME);
