@@ -75,7 +75,7 @@ CMD ["bash", "-c", "set -euo pipefail \
       && if [[ \"x${PROMETHEUS_PORT}\" != \"x\" ]]; then export JAVA_OPTS=\"-javaagent:${JET_HOME}/lib/jmx_prometheus_javaagent.jar=${PROMETHEUS_PORT}:${PROMETHEUS_CONFIG} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${JET_LICENSE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"-Dhazelcast.enterprise.license.key=${JET_LICENSE_KEY} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${JET_LICENCE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"-Dhazelcast.enterprise.license.key=${JET_LICENCE_KEY} ${JAVA_OPTS} \"; fi \
-      && if [[ \"x${LOGGING_LEVEL}\" != \"x\" ]]; then sed -i \"s/log4j.logger.com.hazelcast.jet=info/log4j.logger.com.hazelcast.jet=${LOGGING_LEVEL}/g;s/log4j.rootLogger=info/log4j.rootLogger=${LOGGING_LEVEL}/g\" $JET_HOME/config/log4j.properties; fi \
+      && if [[ \"x${LOGGING_LEVEL}\" != \"x\" ]]; then sed -i \"s/log4j.logger.com.hazelcast.internal.cluster=info/log4j.logger.com.hazelcast.jet=${LOGGING_LEVEL}/g;s/log4j.rootLogger=INFO/log4j.rootLogger=${LOGGING_LEVEL}/g\" $JET_HOME/config/log4j.properties; fi \
       && echo \"########################################\" \
       && echo \"# JAVA_OPTS=${JAVA_OPTS}\" \
       && echo \"# CLASSPATH=${CLASSPATH}\" \
