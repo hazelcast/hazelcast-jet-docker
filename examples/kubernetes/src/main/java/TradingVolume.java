@@ -19,7 +19,6 @@ import com.hazelcast.jet.JetInstance;
 import com.hazelcast.jet.config.JobConfig;
 import com.hazelcast.jet.pipeline.Pipeline;
 import com.hazelcast.jet.pipeline.Sinks;
-import com.hazelcast.jet.server.JetBootstrap;
 import support.Trade;
 
 import static com.hazelcast.jet.aggregate.AggregateOperations.summingLong;
@@ -54,7 +53,7 @@ public class TradingVolume {
     }
 
     public static void main(String[] args) {
-        JetInstance jet = JetBootstrap.getInstance();
+        JetInstance jet = Jet.bootstrappedInstance();
 
 
         startConsolePrinterThread(jet, VOLUME_MAP_NAME);
