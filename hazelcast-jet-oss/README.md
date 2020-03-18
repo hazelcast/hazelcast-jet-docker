@@ -43,7 +43,7 @@ $ docker run -e JAVA_OPTS="-Xms512M -Xmx1024M" hazelcast/hazelcast-jet
 If you need to configure Hazelcast Jet with your own `hazelcast-jet.xml`, you need to mount the folder that has `hazelcast-jet.xml`. You also need to pass the `hazelcast-jet.xml` file path to `hazelcast.jet.config` in `JAVA_OPTS` parameter. Please see the following example:
 
 ```
-$ docker run -e JAVA_OPTS="-Dhazelcast.jet.config=/opt/hazelcast-jet/config_ext/hazelcast-jet.xml" -v PATH_TO_LOCAL_CONFIG_FOLDER:/opt/azelcast-jet/config_ext hazelcast/hazelcast-jet
+$ docker run -e JAVA_OPTS="-Dhazelcast.jet.config=/opt/hazelcast-jet/config_ext/hazelcast-jet.xml" -v PATH_TO_LOCAL_CONFIG_FOLDER:/opt/hazelcast-jet/config_ext hazelcast/hazelcast-jet
 ```
 
 ### Using Custom Hazelcast IMDG Configuration File
@@ -76,7 +76,7 @@ Available logging levels are (from highest to lowest): `SEVERE`, `WARNING`, `INF
 Note that if you need more custom logging configuration, you can configure your own `log4j.properties` file by mounting it into your container like below:
 
 ```
-$ docker run -e JAVA_OPTS="-Dlog4j.configuration=file:/opt/hazelcast-jet/ext-logging-config/log4j.properties" -v PATH_TO_LOCAL_CONFIG_FOLDER:/opt/azelcast-jet/ext-logging-config hazelcast/hazelcast-jet
+$ docker run -e JAVA_OPTS="-Dlog4j.configuration=file:/opt/hazelcast-jet/ext-logging-config/log4j.properties" -v PATH_TO_LOCAL_CONFIG_FOLDER:/opt/hazelcast-jet/ext-logging-config hazelcast/hazelcast-jet
 ```
 
 ### Managing and Monitoring
