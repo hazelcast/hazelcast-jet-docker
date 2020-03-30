@@ -1,11 +1,11 @@
 # Hazelcast Jet Docker Images
 
-[Hazelcast Jet](http://jet.hazelcast.org) is a distributed computing
+[Hazelcast Jet](https://jet-start.sh) is a distributed computing
 platform built for high-performance stream processing and fast batch
 processing. It embeds Hazelcast In-Memory Data Grid (IMDG) to provide
 a lightweight package of a processor and a scalable in-memory storage.
 
-Visit [Hazelcast Jet Website](http://jet.hazelcast.org) to learn more
+Visit [Hazelcast Jet Website](https://jet-start.sh) to learn more
 about the architecture and use-cases.
 
 ## Hazelcast Jet Quick Start
