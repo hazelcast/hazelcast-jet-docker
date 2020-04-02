@@ -30,6 +30,8 @@ template).
 ```
 apiVersion: v1
 kind: Template
+metadata:
+  name: hazelcast-jet
 objects:
 - apiVersion: v1
   kind: ConfigMap
@@ -44,9 +46,11 @@ objects:
                 enabled: false
             kubernetes:
                 enabled: true
-                namespace: default
-                service-name: hazelcast-jet-service
-
+        rest-api:
+          enabled: true
+          endpoint-groups:
+            HEALTH_CHECK:
+              enabled: true
 - apiVersion: apps/v1
   kind: StatefulSet
   metadata:
@@ -80,7 +84,7 @@ objects:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /hazelcast/health/node-state
+              path: /hazelcast/health/ready
               port: 5701
             initialDelaySeconds: 180
             periodSeconds: 10
@@ -99,7 +103,7 @@ objects:
                 name: jet-license-key
                 key: key
           - name: JAVA_OPTS
-            value: "-Dhazelcast.rest.enabled=true -Dhazelcast.config=/data/hazelcast-jet/hazelcast.yaml"
+            value: "-Dhazelcast.config=/data/hazelcast-jet/hazelcast.yaml"
         volumes:
         - name: hazelcast-jet-storage
           configMap:
@@ -107,7 +111,6 @@ objects:
               items:
                 - key: hazelcast.yaml
                   path: hazelcast.yaml
-
 - apiVersion: v1
   kind: Service
   metadata:
