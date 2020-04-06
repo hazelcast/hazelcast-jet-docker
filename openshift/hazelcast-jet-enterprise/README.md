@@ -40,17 +40,18 @@ objects:
   data:
     hazelcast.yaml: |-
         hazelcast:
-        network:
+          cluster-name: jet
+          network:
             join:
-            multicast:
-                enabled: false
-            kubernetes:
+              multicast:
+                  enabled: false
+              kubernetes:
+                  enabled: true
+          rest-api:
+            enabled: true
+            endpoint-groups:
+              HEALTH_CHECK:
                 enabled: true
-        rest-api:
-          enabled: true
-          endpoint-groups:
-            HEALTH_CHECK:
-              enabled: true
 - apiVersion: apps/v1
   kind: StatefulSet
   metadata:

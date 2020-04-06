@@ -14,7 +14,6 @@ ARG JMX_PROMETHEUS_AGENT_VERSION=0.12.0
 ARG JET_HOME="/opt/hazelcast-jet-enterprise"
 ARG JET_JAR="hazelcast-jet-enterprise-${JET_VERSION}.jar"
 ARG CACHE_API_JAR="cache-api-${CACHE_API_VERSION}.jar"
-ARG HZ_AWS_API_JAR="hazelcast-aws-${HZ_AWS_VERSION}.jar"
 
 LABEL name="hazelcast/hazelcast-jet-enterprise-openshift-rhel" \
       vendor="Hazelcast, Inc." \
