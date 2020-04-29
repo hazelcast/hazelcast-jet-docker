@@ -73,11 +73,11 @@ RUN cd mvnw && \
 
 COPY jmx_agent_config.yaml ${JET_HOME}/jmx_agent_config.yaml
 COPY hazelcast.yaml ${JET_HOME}/config/hazelcast.yaml
-COPY log4j.properties ${JET_HOME}/config/log4j.properties
+COPY log4j2.properties ${JET_HOME}/config/log4j2.properties
 
 # Runtime constants
 ENV CLASSPATH_DEFAULT "${JET_HOME}:${JET_HOME}/*:${JET_HOME}/lib:${JET_HOME}/lib/*"
-ENV JAVA_OPTS_DEFAULT "-Djava.net.preferIPv4Stack=true -Dhazelcast.logging.type=log4j -Dlog4j.configuration=file:$JET_HOME/config/log4j.properties -Djet.home=$JET_HOME -Dhazelcast.config=$JET_HOME/config/hazelcast.yaml -Dhazelcast.client.config=$JET_HOME/config/hazelcast-client.yaml -Dhazelcast.jet.config=$JET_HOME/config/hazelcast-jet.yaml"
+ENV JAVA_OPTS_DEFAULT "-Djava.net.preferIPv4Stack=true -Dhazelcast.logging.type=log4j2 -Dlog4j.configurationFile=file:$JET_HOME/config/log4j2.properties -Djet.home=$JET_HOME -Dhazelcast.config=$JET_HOME/config/hazelcast.yaml -Dhazelcast.client.config=$JET_HOME/config/hazelcast-client.yaml -Dhazelcast.jet.config=$JET_HOME/config/hazelcast-jet.yaml"
 
 # Runtime environment variables
 ENV JET_HOME $JET_HOME
@@ -105,7 +105,7 @@ CMD ["bash", "-c", "set -euo pipefail \
       && if [[ \"x${PROMETHEUS_PORT}\" != \"x\" ]]; then export JAVA_OPTS=\"-javaagent:${JET_HOME}/lib/jmx_prometheus_javaagent.jar=${PROMETHEUS_PORT}:${PROMETHEUS_CONFIG} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${JET_LICENSE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"-Dhazelcast.enterprise.license.key=${JET_LICENSE_KEY} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${JET_LICENCE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"-Dhazelcast.enterprise.license.key=${JET_LICENCE_KEY} ${JAVA_OPTS} \"; fi \
-      && if [[ \"x${LOGGING_LEVEL}\" != \"x\" ]]; then sed -i \"s/log4j.logger.com.hazelcast=info/log4j.logger.com.hazelcast=${LOGGING_LEVEL}/g;s/log4j.rootLogger=INFO/log4j.rootLogger=${LOGGING_LEVEL}/g\" $JET_HOME/config/log4j.properties; fi \
+      && if [[ \"x${LOGGING_LEVEL}\" != \"x\" ]]; then sed -i \"s/logger.jet.level=info/logger.jet.level=${LOGGING_LEVEL}/g;s/rootLogger.level=info/rootLogger.level=${LOGGING_LEVEL}/g\" $JET_HOME/config/log4j2.properties; fi \
       && echo \"########################################\" \
       && echo \"# JAVA_OPTS=${JAVA_OPTS}\" \
       && echo \"# CLASSPATH=${CLASSPATH}\" \
