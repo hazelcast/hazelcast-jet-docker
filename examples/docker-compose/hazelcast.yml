@@ -18,5 +18,5 @@ services:
         - hazelcast-jet
     container_name: hazelcast-jet-submit
     working_dir: /opt/hazelcast-jet/
-    entrypoint: jet.sh -v submit $JOB_JAR
+    entrypoint: jet -v submit $JOB_JAR
 
