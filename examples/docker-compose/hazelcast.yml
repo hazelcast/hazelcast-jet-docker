@@ -3,16 +3,16 @@ services:
   hazelcast-jet:
     image: hazelcast/hazelcast-jet
     volumes:
-        - ./src/main/resources:/opt/hazelcast-jet/config/
+        - ./src/main/resources:/opt/hazelcast-jet/config_ext/
     environment:
-        - JAVA_OPTS=-Dhazelcast.config=/opt/hazelcast-jet/config/hazelcast.xml -Dgroup.name=hazelcast-jet-docker-compose
+        - JAVA_OPTS=-Dhazelcast.config=/opt/hazelcast-jet/config_ext/hazelcast.yaml -Dgroup.name=hazelcast-jet-docker-compose
   hazelcast-jet-submit:
     image: hazelcast/hazelcast-jet
     volumes:
-        - ./src/main/resources:/opt/hazelcast-jet/config/
+        - ./src/main/resources:/opt/hazelcast-jet/config_ext/
         - ./jars/:/jars/
     environment:
-        - JAVA_OPTS=-Dhazelcast.client.config=/opt/hazelcast-jet/config/hazelcast-client.xml -Dhazelcast.member.address=hazelcast-jet -Dgroup.name=hazelcast-jet-docker-compose
+        - JAVA_OPTS=-Dhazelcast.client.config=/opt/hazelcast-jet/config_ext/hazelcast-client.yaml -Dhazelcast.member.address=hazelcast-jet -Dgroup.name=hazelcast-jet-docker-compose
         - JOB_JAR=${JOB_JAR}
     depends_on:
         - hazelcast-jet
