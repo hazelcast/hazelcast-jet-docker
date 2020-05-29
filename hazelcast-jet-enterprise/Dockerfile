@@ -3,7 +3,7 @@ FROM openjdk:8u201-jre-alpine
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
 ARG JET_VERSION=4.1
 ARG CACHE_API_VERSION=1.1.1
-ARG HZ_EUREKA_VERSION=1.1.2
+ARG HZ_EUREKA_VERSION=2.0.1
 ARG JMX_PROMETHEUS_AGENT_VERSION=0.12.0
 
 # Build constants
