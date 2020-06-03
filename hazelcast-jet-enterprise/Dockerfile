@@ -1,4 +1,4 @@
-FROM openjdk:8u201-jre-alpine
+FROM openjdk:11.0.7-jre-slim
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
 ARG JET_VERSION=4.1
@@ -13,8 +13,10 @@ ARG CACHE_API_JAR="cache-api-${CACHE_API_VERSION}.jar"
 ARG HZ_AWS_API_JAR="hazelcast-aws-${HZ_AWS_VERSION}.jar"
 
 # Install bash & curl
-RUN apk add --no-cache bash curl \
- && rm -rf /var/cache/apk/*
+RUN apt-get update && apt-get -y install \
+ bash \
+ curl \
+ && apt-get clean
 
 # Set up build directory
 RUN mkdir -p ${JET_HOME}

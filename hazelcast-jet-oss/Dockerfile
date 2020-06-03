@@ -1,4 +1,4 @@
-FROM openjdk:8u201-jre-alpine
+FROM openjdk:11.0.7-jre-slim
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
 ARG JET_VERSION=4.1
@@ -11,8 +11,10 @@ ARG JET_HOME="/opt/hazelcast-jet"
 ARG JET_JAR="hazelcast-jet-${JET_VERSION}.jar"
 
 # Install bash & curl
-RUN apk add --no-cache bash curl \
- && rm -rf /var/cache/apk/*
+RUN apt-get update && apt-get -y install \
+ bash \
+ curl \
+ && apt-get clean
 
 # Set up build directory
 RUN mkdir -p ${JET_HOME}
@@ -49,7 +51,8 @@ COPY log4j2.properties ${JET_HOME}/config/log4j2.properties
 
 # Runtime constants
 ENV CLASSPATH_DEFAULT "${JET_HOME}:${JET_HOME}/*:${JET_HOME}/lib:${JET_HOME}/lib/*"
-ENV JAVA_OPTS_DEFAULT "-Djava.net.preferIPv4Stack=true -Dhazelcast.logging.type=log4j2 -Dlog4j.configurationFile=file:$JET_HOME/config/log4j2.properties -Djet.home=$JET_HOME -Dhazelcast.config=$JET_HOME/config/hazelcast.yaml -Dhazelcast.client.config=$JET_HOME/config/hazelcast-client.yaml -Dhazelcast.jet.config=$JET_HOME/config/hazelcast-jet.yaml"
+ENV JAVA_OPTS_DEFAULT "--add-modules java.se --add-exports java.base/jdk.internal.ref=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.management/sun.management=ALL-UNNAMED --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED \
+ -Djava.net.preferIPv4Stack=true -Dhazelcast.logging.type=log4j2 -Dlog4j.configurationFile=file:$JET_HOME/config/log4j2.properties -Djet.home=$JET_HOME -Dhazelcast.config=$JET_HOME/config/hazelcast.yaml -Dhazelcast.client.config=$JET_HOME/config/hazelcast-client.yaml -Dhazelcast.jet.config=$JET_HOME/config/hazelcast-jet.yaml"
 
 # Runtime environment variables
 ENV JET_HOME $JET_HOME
