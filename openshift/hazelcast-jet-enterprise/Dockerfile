@@ -39,7 +39,7 @@ RUN mkdir -p ${JET_HOME} && \
       dnf update -y  && rm -rf /var/cache/dnf && \
       dnf -y update-minimal --security --sec-severity=Important --sec-severity=Critical --setopt=tsflags=nodocs && \
       ### Add your package needs to this installation line
-      dnf -y --setopt=tsflags=nodocs install java-1.8.0-openjdk-devel apr openssl &> /dev/null && \
+      dnf -y --setopt=tsflags=nodocs install java-11-openjdk-headless apr openssl &> /dev/null && \
       ### Install go-md2man to help markdown to man conversion
       dnf -y --setopt=tsflags=nodocs install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &> /dev/null && \
       dnf -y --setopt=tsflags=nodocs install golang-github-cpuguy83-go-md2man &> /dev/null && \
@@ -77,7 +77,8 @@ COPY log4j2.properties ${JET_HOME}/config/log4j2.properties
 
 # Runtime constants
 ENV CLASSPATH_DEFAULT "${JET_HOME}:${JET_HOME}/*:${JET_HOME}/lib:${JET_HOME}/lib/*"
-ENV JAVA_OPTS_DEFAULT "-Djava.net.preferIPv4Stack=true -Dhazelcast.logging.type=log4j2 -Dlog4j.configurationFile=file:$JET_HOME/config/log4j2.properties -Djet.home=$JET_HOME -Dhazelcast.config=$JET_HOME/config/hazelcast.yaml -Dhazelcast.client.config=$JET_HOME/config/hazelcast-client.yaml -Dhazelcast.jet.config=$JET_HOME/config/hazelcast-jet.yaml"
+ENV JAVA_OPTS_DEFAULT "--add-modules java.se --add-exports java.base/jdk.internal.ref=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.management/sun.management=ALL-UNNAMED --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED \
+ -Djava.net.preferIPv4Stack=true -Dhazelcast.logging.type=log4j2 -Dlog4j.configurationFile=file:$JET_HOME/config/log4j2.properties -Djet.home=$JET_HOME -Dhazelcast.config=$JET_HOME/config/hazelcast.yaml -Dhazelcast.client.config=$JET_HOME/config/hazelcast-client.yaml -Dhazelcast.jet.config=$JET_HOME/config/hazelcast-jet.yaml"
 
 # Runtime environment variables
 ENV JET_HOME $JET_HOME
