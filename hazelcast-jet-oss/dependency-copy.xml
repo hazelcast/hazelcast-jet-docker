@@ -50,7 +50,7 @@
                 <version>3.1.1</version>
                 <configuration>
                     <outputDirectory>
-                        ${env.JET_HOME}/hazelcast-jet-${hazelcast-jet-version}/lib
+                        ${project.basedir}/hazelcast-jet-${hazelcast-jet-version}
                     </outputDirectory>
                     <artifactItems>
                         <artifactItem>
@@ -58,32 +58,10 @@
                             <artifactId>hazelcast-jet-distribution</artifactId>
                             <version>${hazelcast-jet-version}</version>
                             <type>zip</type>
-                            <outputDirectory>${env.JET_HOME}</outputDirectory>
+                            <outputDirectory>${project.basedir}</outputDirectory>
                             <includes>
-                                hazelcast-jet-${hazelcast-jet-version}/bin/
-                            </includes>
-                            <excludes>META-INF/</excludes>
-                            <overWrite>true</overWrite>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>com.hazelcast.jet</groupId>
-                            <artifactId>hazelcast-jet-distribution</artifactId>
-                            <version>${hazelcast-jet-version}</version>
-                            <type>zip</type>
-                            <outputDirectory>${env.JET_HOME}</outputDirectory>
-                            <includes>
-                                hazelcast-jet-${hazelcast-jet-version}/lib/
-                            </includes>
-                            <excludes>META-INF/</excludes>
-                            <overWrite>true</overWrite>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>com.hazelcast.jet</groupId>
-                            <artifactId>hazelcast-jet-distribution</artifactId>
-                            <version>${hazelcast-jet-version}</version>
-                            <type>zip</type>
-                            <outputDirectory>${env.JET_HOME}</outputDirectory>
-                            <includes>
+                                hazelcast-jet-${hazelcast-jet-version}/bin/,
+                                hazelcast-jet-${hazelcast-jet-version}/lib/,
                                 hazelcast-jet-${hazelcast-jet-version}/config/
                             </includes>
                             <excludes>META-INF/</excludes>

@@ -1,4 +1,9 @@
-FROM openjdk:11.0.7-jre-slim
+####
+#### Build stage - downloads dependencies using maven
+####
+FROM maven:3.6-openjdk-11
+
+WORKDIR /tmp/build
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
 ARG JET_VERSION=4.1
@@ -6,79 +11,53 @@ ARG CACHE_API_VERSION=1.1.1
 ARG HZ_EUREKA_VERSION=2.0.1
 ARG JMX_PROMETHEUS_AGENT_VERSION=0.12.0
 
-# Build constants
-ARG JET_HOME="/opt/hazelcast-jet"
-ARG JET_JAR="hazelcast-jet-${JET_VERSION}.jar"
-
-# Install bash & curl
-RUN apt-get update && apt-get -y install \
- bash \
- curl \
- && apt-get clean
-
-# Set up build directory
-RUN mkdir -p ${JET_HOME}
-WORKDIR ${JET_HOME}
+ADD dependency-copy.xml /tmp/build/
 
 # Download and install Hazelcast Jet and Hazelcast plugins
 #(hazelcast-eureka, jcache-api and prometheus agent) with dependencies
-# Use Maven Wrapper to fetch dependencies specified in mvnw/dependency-copy.xml
-RUN curl -svf -o ${JET_HOME}/maven-wrapper.tar.gz \
-         -L https://github.com/takari/maven-wrapper/archive/maven-wrapper-0.3.0.tar.gz \
- && tar zxf maven-wrapper.tar.gz \
- && rm -fr maven-wrapper.tar.gz \
- && mv maven-wrapper* mvnw
-COPY mvnw ${JET_HOME}/mvnw
-RUN cd mvnw \
- && chmod +x mvnw \
- && sync \
- && ./mvnw -f dependency-copy.xml \
-           -Dhazelcast-eureka-version=${HZ_EUREKA_VERSION} \
-           -Dhazelcast-jet-version=${JET_VERSION} \
-           -Djcache-version=${CACHE_API_VERSION} \
-           -Dprometheus-java-version=${JMX_PROMETHEUS_AGENT_VERSION} \
-           dependency:copy-dependencies \
-           dependency:unpack \
- && cd .. \
- && rm -rf $JET_HOME/mvnw \
- && rm -rf ~/.m2 \
- && chmod -R +r $JET_HOME \
- && mv $JET_HOME/hazelcast-jet-$JET_VERSION/* $JET_HOME/ \ 
- && rm -rf $JET_HOME/hazelcast-jet-$JET_VERSION 
+RUN mvn -f dependency-copy.xml \
+      -Dhazelcast-eureka-version=${HZ_EUREKA_VERSION} \
+      -Dhazelcast-jet-version=${JET_VERSION} \
+      -Djcache-version=${CACHE_API_VERSION} \
+      -Dprometheus-java-version=${JMX_PROMETHEUS_AGENT_VERSION} \
+      dependency:copy-dependencies \
+      dependency:unpack && \
+      mv hazelcast-jet-${JET_VERSION} hazelcast-jet && \
+      chmod -R +r .
 
-COPY jmx_agent_config.yaml ${JET_HOME}/jmx_agent_config.yaml
-COPY log4j2.properties ${JET_HOME}/config/log4j2.properties
+####
+#### Final stage - creates final image
+####
+FROM openjdk:11.0.7-jre-slim
 
-# Runtime constants
-ENV CLASSPATH_DEFAULT "${JET_HOME}:${JET_HOME}/*:${JET_HOME}/lib:${JET_HOME}/lib/*"
-ENV JAVA_OPTS_DEFAULT "--add-modules java.se --add-exports java.base/jdk.internal.ref=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.nio=ALL-UNNAMED --add-opens java.base/sun.nio.ch=ALL-UNNAMED --add-opens java.management/sun.management=ALL-UNNAMED --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED \
- -Djava.net.preferIPv4Stack=true -Dhazelcast.logging.type=log4j2 -Dlog4j.configurationFile=file:$JET_HOME/config/log4j2.properties -Djet.home=$JET_HOME -Dhazelcast.config=$JET_HOME/config/hazelcast.yaml -Dhazelcast.client.config=$JET_HOME/config/hazelcast-client.yaml -Dhazelcast.jet.config=$JET_HOME/config/hazelcast-jet.yaml"
+ARG JET_HOME="/opt/hazelcast-jet"
 
-# Runtime environment variables
-ENV JET_HOME $JET_HOME
-ENV CLASSPATH ""
-ENV JAVA_OPTS ""
-ENV PATH $JET_HOME/bin:$PATH
-ENV LOGGING_LEVEL ""
-ENV PROMETHEUS_PORT ""
-ENV PROMETHEUS_CONFIG $JET_HOME/jmx_agent_config.yaml
+COPY --from=0 /tmp/build/hazelcast-jet ${JET_HOME}/
+COPY log4j2.properties jmx_agent_config.yaml ${JET_HOME}/config/
+
+# TODO
+# why JET_HOME, JET_HOME/*?, should we keep ${JET_HOME}/lib? main distribution doesn' have it
+ENV CLASSPATH_DEFAULT="${JET_HOME}:${JET_HOME}/*:${JET_HOME}/lib:${JET_HOME}/lib/*" \
+ JAVA_OPTS_DEFAULT="-Djava.net.preferIPv4Stack=true -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0" \
+ JET_HOME=$JET_HOME \
+ CLASSPATH="" \
+ JAVA_OPTS="" \
+ PATH=$JET_HOME/bin:$PATH \
+ LOGGING_LEVEL="info" \
+ PROMETHEUS_PORT="" \
+ PROMETHEUS_CONFIG=$JET_HOME/config/jmx_agent_config.yaml
 
 ### Expose port
 EXPOSE 5701
 
+## TODO temporary
+COPY jet-start $JET_HOME/bin/jet-start
+
 # Start Hazelcast Jet server
 CMD ["bash", "-c", "set -euo pipefail \
-      && eval JAVA_OPTS=\\\"${JAVA_OPTS}\\\" \
-      && eval CLASSPATH=\\\"${CLASSPATH}\\\" \
       && if [[ \"x${CLASSPATH}\" != \"x\" ]]; then export CLASSPATH=\"${CLASSPATH}:${CLASSPATH_DEFAULT}\"; else export CLASSPATH=\"${CLASSPATH_DEFAULT}\"; fi \
       && if [[ \"x${JAVA_OPTS}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT} ${JAVA_OPTS}\"; else export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT}\"; fi \
       && if [[ \"x${PROMETHEUS_PORT}\" != \"x\" ]]; then export JAVA_OPTS=\"-javaagent:${JET_HOME}/lib/jmx_prometheus_javaagent.jar=${PROMETHEUS_PORT}:${PROMETHEUS_CONFIG} ${JAVA_OPTS} \"; fi \
-      && if [[ \"x${LOGGING_LEVEL}\" != \"x\" ]]; then sed -i \"s/logger.jet.level=info/logger.jet.level=${LOGGING_LEVEL}/g;s/rootLogger.level=info/rootLogger.level=${LOGGING_LEVEL}/g\" $JET_HOME/config/log4j2.properties; fi \
-      && echo \"########################################\" \
-      && echo \"# JAVA_OPTS=${JAVA_OPTS}\" \
-      && echo \"# CLASSPATH=${CLASSPATH}\" \
-      && echo \"# starting now....\" \
-      && echo \"########################################\" \
       && set -x \
-      && exec java -server ${JAVA_OPTS} com.hazelcast.jet.server.JetMemberStarter \
+      && jet-start \
      "]
