@@ -31,21 +31,23 @@ RUN mvn -f dependency-copy.xml \
 FROM openjdk:11.0.7-jre-slim
 
 ARG JET_HOME="/opt/hazelcast-jet"
+# Needs to be duplicated in both stages
+ARG JMX_PROMETHEUS_AGENT_VERSION=0.12.0
 
 COPY --from=0 /tmp/build/hazelcast-jet ${JET_HOME}/
 COPY log4j2.properties jmx_agent_config.yaml ${JET_HOME}/config/
-RUN echo 'hazelcastDownloadId=docker' > "${JET_HOME}/hazelcast-download.properties"
+RUN echo 'hazelcastDownloadId=docker' > "${JET_HOME}/lib/hazelcast-download.properties"
 
-# TODO
-# why JET_HOME, JET_HOME/*?, should we keep ${JET_HOME}/lib? main distribution doesn' have it
-ENV CLASSPATH_DEFAULT="${JET_HOME}:${JET_HOME}/*:${JET_HOME}/lib:${JET_HOME}/lib/*" \
- JAVA_OPTS_DEFAULT="-Djava.net.preferIPv4Stack=true -XX:InitialRAMPercentage=80.0 -XX:MaxRAMPercentage=80.0" \
+ENV CLASSPATH_DEFAULT="" \
+ JAVA_OPTS_DEFAULT="-Djava.net.preferIPv4Stack=true" \
  JET_HOME=$JET_HOME \
  CLASSPATH="" \
  JAVA_OPTS="" \
+ JET_MODULES="" \
  PATH=$JET_HOME/bin:$PATH \
  LOGGING_LEVEL="info" \
  PROMETHEUS_PORT="" \
+ PROMETHEUS_AGENT_VERSION="$JMX_PROMETHEUS_AGENT_VERSION" \
  PROMETHEUS_CONFIG=$JET_HOME/config/jmx_agent_config.yaml
 
 ### Expose port
@@ -58,7 +60,7 @@ COPY jet-start $JET_HOME/bin/jet-start
 CMD ["bash", "-c", "set -euo pipefail \
       && if [[ \"x${CLASSPATH}\" != \"x\" ]]; then export CLASSPATH=\"${CLASSPATH}:${CLASSPATH_DEFAULT}\"; else export CLASSPATH=\"${CLASSPATH_DEFAULT}\"; fi \
       && if [[ \"x${JAVA_OPTS}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT} ${JAVA_OPTS}\"; else export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT}\"; fi \
-      && if [[ \"x${PROMETHEUS_PORT}\" != \"x\" ]]; then export JAVA_OPTS=\"-javaagent:${JET_HOME}/lib/jmx_prometheus_javaagent.jar=${PROMETHEUS_PORT}:${PROMETHEUS_CONFIG} ${JAVA_OPTS} \"; fi \
+      && if [[ \"x${PROMETHEUS_PORT}\" != \"x\" ]]; then export JAVA_OPTS=\"-javaagent:${JET_HOME}/lib/jmx_prometheus_javaagent-$PROMETHEUS_AGENT_VERSION.jar=${PROMETHEUS_PORT}:${PROMETHEUS_CONFIG} ${JAVA_OPTS} \"; fi \
       && set -x \
       && jet-start \
      "]
