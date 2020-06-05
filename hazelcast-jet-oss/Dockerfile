@@ -38,13 +38,13 @@ COPY --from=0 /tmp/build/hazelcast-jet ${JET_HOME}/
 COPY log4j2.properties jmx_agent_config.yaml ${JET_HOME}/config/
 RUN echo 'hazelcastDownloadId=docker' > "${JET_HOME}/lib/hazelcast-download.properties"
 
-ENV CLASSPATH_DEFAULT="" \
- JAVA_OPTS_DEFAULT="-Djava.net.preferIPv4Stack=true" \
- JET_HOME=$JET_HOME \
+ENV PATH=$JET_HOME/bin:$PATH \
+ CLASSPATH_DEFAULT="" \
  CLASSPATH="" \
+ JAVA_OPTS_DEFAULT="-Djava.net.preferIPv4Stack=true -XX:MaxRAMPercentage=80.0" \
  JAVA_OPTS="" \
+ JET_HOME=$JET_HOME \
  JET_MODULES="" \
- PATH=$JET_HOME/bin:$PATH \
  LOGGING_LEVEL="info" \
  PROMETHEUS_PORT="" \
  PROMETHEUS_AGENT_VERSION="$JMX_PROMETHEUS_AGENT_VERSION" \
