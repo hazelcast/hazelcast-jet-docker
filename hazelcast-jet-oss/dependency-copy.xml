@@ -62,7 +62,8 @@
                             <includes>
                                 hazelcast-jet-${hazelcast-jet-version}/bin/,
                                 hazelcast-jet-${hazelcast-jet-version}/lib/,
-                                hazelcast-jet-${hazelcast-jet-version}/config/
+                                hazelcast-jet-${hazelcast-jet-version}/config/,
+                                hazelcast-jet-${hazelcast-jet-version}/opt/
                             </includes>
                             <excludes>META-INF/</excludes>
                             <overWrite>true</overWrite>
