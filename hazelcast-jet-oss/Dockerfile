@@ -34,6 +34,7 @@ ARG JET_HOME="/opt/hazelcast-jet"
 
 COPY --from=0 /tmp/build/hazelcast-jet ${JET_HOME}/
 COPY log4j2.properties jmx_agent_config.yaml ${JET_HOME}/config/
+RUN echo 'hazelcastDownloadId=docker' > "${JET_HOME}/hazelcast-download.properties"
 
 # TODO
 # why JET_HOME, JET_HOME/*?, should we keep ${JET_HOME}/lib? main distribution doesn' have it
