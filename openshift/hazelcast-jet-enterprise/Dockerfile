@@ -69,6 +69,7 @@ RUN cd mvnw && \
       chmod -R g=u "$JET_HOME" && \
       chmod -R +r $JET_HOME && \
       mv $JET_HOME/hazelcast-jet-enterprise-$JET_VERSION/* $JET_HOME/ && \
+      mv $JET_HOME/lib/jmx_prometheus_javaagent-*.jar $JET_HOME/lib/jmx_prometheus_javaagent.jar && \
       rm -rf $JET_HOME/hazelcast-jet-enterprise-$JET_VERSION
 
 COPY jmx_agent_config.yaml ${JET_HOME}/jmx_agent_config.yaml
