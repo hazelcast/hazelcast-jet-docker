@@ -8,7 +8,6 @@ ENV USER_NAME="jet" \
 ARG JET_VERSION=4.1
 ARG CACHE_API_VERSION=1.1.1
 ARG HZ_EUREKA_VERSION=2.0.1
-ARG JMX_PROMETHEUS_AGENT_VERSION=0.12.0
 
 # Build constants
 ARG JET_HOME="/opt/hazelcast-jet-enterprise"
@@ -50,7 +49,7 @@ RUN mkdir -p ${JET_HOME} && \
 WORKDIR ${JET_HOME}
 
 # Download and install Hazelcast Jet Enterprise and Hazelcast plugins
-# (hazelcast-eureka, jcache-api and prometheus agent) with dependencies
+# (hazelcast-eureka, jcache-api) with dependencies
 RUN cd mvnw && \
       chmod +x mvnw && \
       sync && \
@@ -58,7 +57,6 @@ RUN cd mvnw && \
       -Dhazelcast-eureka-version=${HZ_EUREKA_VERSION} \
       -Dhazelcast-jet-version=${JET_VERSION} \
       -Djcache-version=${CACHE_API_VERSION} \
-      -Dprometheus-java-version=${JMX_PROMETHEUS_AGENT_VERSION} \
       dependency:copy-dependencies \
       dependency:unpack && \
       cd .. && \
@@ -89,7 +87,6 @@ ENV JET_LICENCE_KEY ""
 ENV PATH $JET_HOME/bin:$PATH
 ENV LOGGING_LEVEL ""
 ENV PROMETHEUS_PORT ""
-ENV PROMETHEUS_CONFIG $JET_HOME/jmx_agent_config.yaml
 
 ### Switch to jet user
 USER $USER_UID
@@ -103,7 +100,6 @@ CMD ["bash", "-c", "set -euo pipefail \
       && eval CLASSPATH=\\\"${CLASSPATH}\\\" \
       && if [[ \"x${CLASSPATH}\" != \"x\" ]]; then export CLASSPATH=\"${CLASSPATH}:${CLASSPATH_DEFAULT}\"; else export CLASSPATH=\"${CLASSPATH_DEFAULT}\"; fi \
       && if [[ \"x${JAVA_OPTS}\" != \"x\" ]]; then export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT} ${JAVA_OPTS}\"; else export JAVA_OPTS=\"${JAVA_OPTS_DEFAULT}\"; fi \
-      && if [[ \"x${PROMETHEUS_PORT}\" != \"x\" ]]; then export JAVA_OPTS=\"-javaagent:${JET_HOME}/lib/jmx_prometheus_javaagent.jar=${PROMETHEUS_PORT}:${PROMETHEUS_CONFIG} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${JET_LICENSE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"-Dhazelcast.enterprise.license.key=${JET_LICENSE_KEY} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${JET_LICENCE_KEY}\" != \"x\" ]]; then export JAVA_OPTS=\"-Dhazelcast.enterprise.license.key=${JET_LICENCE_KEY} ${JAVA_OPTS} \"; fi \
       && if [[ \"x${LOGGING_LEVEL}\" != \"x\" ]]; then sed -i \"s/logger.jet.level=info/logger.jet.level=${LOGGING_LEVEL}/g;s/rootLogger.level=info/rootLogger.level=${LOGGING_LEVEL}/g\" $JET_HOME/config/log4j2.properties; fi \

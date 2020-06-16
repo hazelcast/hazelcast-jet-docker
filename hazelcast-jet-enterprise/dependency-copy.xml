@@ -46,11 +46,6 @@
             <artifactId>cache-api</artifactId>
             <version>${jcache-version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.prometheus.jmx</groupId>
-            <artifactId>jmx_prometheus_javaagent</artifactId>
-            <version>${prometheus-java-version}</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
