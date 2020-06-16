@@ -54,9 +54,6 @@ ENV PATH=$JET_HOME/bin:$PATH \
 ### Expose port
 EXPOSE 5701
 
-## TODO temporary
-COPY jet-start $JET_HOME/bin/jet-start
-
 # Start Hazelcast Jet server
 CMD ["bash", "-c", "set -euo pipefail \
       && if [[ \"x${CLASSPATH}\" != \"x\" ]]; then export CLASSPATH=\"${CLASSPATH}:${CLASSPATH_DEFAULT}\"; else export CLASSPATH=\"${CLASSPATH_DEFAULT}\"; fi \
