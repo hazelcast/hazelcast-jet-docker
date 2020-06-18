@@ -31,7 +31,7 @@ FROM openjdk:11.0.7-jre-slim
 ARG JET_HOME="/opt/hazelcast-jet-enterprise"
 
 COPY --from=0 /tmp/build/hazelcast-jet-enterprise ${JET_HOME}/
-COPY log4j2.properties jmx_agent_config.yaml ${JET_HOME}/config/
+COPY log4j2.properties ${JET_HOME}/config/
 RUN echo 'hazelcastDownloadId=docker' > "${JET_HOME}/lib/hazelcast-download.properties"
 
 ENV PATH=$JET_HOME/bin:$PATH \

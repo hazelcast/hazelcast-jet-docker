@@ -32,7 +32,7 @@ ARG JET_HOME="/opt/hazelcast-jet"
 # Needs to be duplicated in both stages
 
 COPY --from=0 /tmp/build/hazelcast-jet ${JET_HOME}/
-COPY log4j2.properties jmx_agent_config.yaml ${JET_HOME}/config/
+COPY log4j2.properties ${JET_HOME}/config/
 RUN echo 'hazelcastDownloadId=docker' > "${JET_HOME}/lib/hazelcast-download.properties"
 
 ENV PATH=$JET_HOME/bin:$PATH \
