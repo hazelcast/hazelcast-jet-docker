@@ -18,12 +18,14 @@ Please request trial license
 [here](https://hazelcast.com/hazelcast-enterprise-download/) or contact
 sales@hazelcast.com.
 
+```bash
+docker run -e JET_LICENSE_KEY=<your_license_key> -p 5701:5701 hazelcast/hazelcast-jet-enterprise
+docker run -e JET_LICENSE_KEY=<your_license_key> -p 5702:5701 hazelcast/hazelcast-jet-enterprise
 ```
-$ docker run -e JET_LICENSE_KEY=<your_license_key> -e JAVA_OPTS="-Dhazelcast.local.publicAddress=<host_ip>:5701" -p 5701:5701 hazelcast/hazelcast-jet-enterprise
-$ docker run -e JET_LICENSE_KEY=<your_license_key> -e JAVA_OPTS="-Dhazelcast.local.publicAddress=<host_ip>:5702" -p 5702:5701 hazelcast/hazelcast-jet-enterprise
 
-## For Hazelcast Jet Management Center
-$ docker run -p 8081:8081 hazelcast/hazelcast-jet-management-center
+For Hazelcast Jet Management Center
+```bash
+$ docker run -e MC_LICENSE_KEY=<your_license_key> -p 8081:8081 hazelcast/hazelcast-jet-management-center
 ```
 
 Note that:
@@ -36,102 +38,9 @@ Note that:
 After setting up the cluster, you can start the client application to
 check it works correctly.
 
-## Hazelcast Jet Defined Environment Variables
-
-### JAVA_OPTS
-
-As shown below, you can use `JAVA_OPTS` environment variable if you need
-to pass multiple VM arguments to your Hazelcast Jet member.
-
-```
-docker run -e JAVA_OPTS="-Xms512M -Xmx1024M" hazelcast/hazelcast-jet
-```
-
-## Configuration
-
-### Using Custom Hazelcast Jet Configuration File
-
-If you need to configure Hazelcast Jet with your own
-`hazelcast-jet.xml`, you need to mount the folder that has
-`hazelcast-jet.xml`. You also need to pass the `hazelcast-jet.xml` file
-path to `hazelcast.jet.config` in `JAVA_OPTS` parameter. Please see the
-following example:
-
-```
-docker run -e JAVA_OPTS="-Dhazelcast.jet.config=/opt/hazelcast-jet/config_ext/hazelcast-jet.xml" -v PATH_TO_LOCAL_CONFIG_FOLDER:/opt/azelcast-jet/config_ext hazelcast/hazelcast-jet
-```
-
-### Using Custom Hazelcast IMDG Configuration File
-
-Similar to providing custom Hazelcast Jet configuration, If you need to
-configure the underlying Hazelcast IMDG instance with your own
-`hazelcast.xml`, you need to mount the folder that has `hazelcast.xml`.
-You also need to pass the `hazelcast.xml` file path to
-`hazelcast.config` in `JAVA_OPTS` parameter. Please see the following
-example:
-
-```
-docker run -e JAVA_OPTS="-Dhazelcast.config=/opt/hazelcast/config_ext/hazelcast.xml" -v PATH_TO_LOCAL_CONFIG_FOLDER:/opt/hazelcast/config_ext hazelcast/hazelcast-jet
-```
-
-### Extending CLASSPATH with new jars or files
-
-If you have custom jars or files to put into classpath of docker
-container, you can simply use `CLASSPATH` environment variable and pass
-it via `docker run` command. Please see the following example:
-
-```
-docker run -e CLASSPATH="/opt/hazelcast-jet/CLASSPATH_EXT/" -v PATH_TO_LOCAL_CONFIG_FOLDER:/opt/hazelcast-jet/CLASSPATH_EXT hazelcast/hazelcast-jet
-```
-
-### LOGGING_LEVEL
-
-The logging level can be changed using the `LOGGING_LEVEL` variable, for
-example, to see the `FINEST` logs.
-
-```
-docker run -e LOGGING_LEVEL=FINEST hazelcast/hazelcast-jet
-```
-
-Available logging levels are (from highest to lowest): `SEVERE`,
-`WARNING`, `INFO`, `CONFIG`, `FINE`, `FINER`, and `FINEST`. The default
-logging level is `INFO`.
-
-Note that if you need more custom logging configuration, you can
-configure your own `log4j.properties` file by mounting it into your
-container like below:
-
-```
-docker run -e JAVA_OPTS="-Dlog4j.configuration=file:/opt/hazelcast-jet/ext-logging-config/log4j.properties" -v PATH_TO_LOCAL_CONFIG_FOLDER:/opt/azelcast-jet/ext-logging-config hazelcast/hazelcast-jet
-```
-
-### Managing and Monitoring
-
-You can use JMX or Prometheus for the application monitoring.
-
-#### JMX
-
-You can use the standard JMX protocol to monitor your Hazelcast Jet
-instance. Start Hazelcast Jet container with the following parameters.
-
-```
-docker run -p 9999:9999 -e JAVA_OPTS='-Dhazelcast.jmx=true -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false' hazelcast/hazelcast-jet
-```
-
-Now you can connect using the address: `localhost:9999`.
-
-#### Prometheus
-
-You can use JMX Prometheus agent and expose JVM and JMX Hazelcast Jet
-metrics.
-
-```
-docker run -p 8080:8080 -e PROMETHEUS_PORT=8080 hazelcast/hazelcast-jet
-```
-
-Then, the metrics are available at: `http://localhost:8080/metrics`.
-Note that you can add also `-e JAVA_OPTS='-Dhazelcast.jmx=true'` to
-expose JMX via Prometheus (otherwise just JVM metrics are visible).
+Please go to the [Hazelcast Jet website](https://jet-start.sh/docs/next/operations/docker)
+for more thorough documentation regarding the configuration, job
+submission, docker-compose and packaging.
 
 ## Hazelcast Jet Management Center
 
