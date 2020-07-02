@@ -5,7 +5,7 @@ ENV USER_NAME="jet" \
       USER_UID=10001
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
-ARG JET_VERSION=4.1
+ARG JET_VERSION=4.1.1
 ARG CACHE_API_VERSION=1.1.1
 ARG HZ_EUREKA_VERSION=2.0.1
 
@@ -67,6 +67,7 @@ RUN cd mvnw && \
       chmod -R g=u "$JET_HOME" && \
       chmod -R +r $JET_HOME && \
       mv $JET_HOME/hazelcast-jet-enterprise-$JET_VERSION/* $JET_HOME/ && \
+      mv $JET_HOME/lib/jmx_prometheus_javaagent-*.jar $JET_HOME/lib/jmx_prometheus_javaagent.jar && \
       rm -rf $JET_HOME/hazelcast-jet-enterprise-$JET_VERSION
 
 COPY jmx_agent_config.yaml ${JET_HOME}/jmx_agent_config.yaml
