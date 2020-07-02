@@ -10,7 +10,7 @@ pipeline {
     stage('Building the OSS image') {
         steps{
           script {
-            ossImage = docker.build(ossRegistry + ":latest", "--force-rm --no-cache ./hazelcast-jet-oss" )
+            ossImage = docker.build(ossRegistry + ":latest-snapshot", "--force-rm --no-cache --build-arg JET_VERSION=$JET_VERSION ./hazelcast-jet-oss" )
           }
         }
       }
@@ -18,7 +18,16 @@ pipeline {
         steps{
           script {
             docker.withRegistry('', 'devopshazelcast-dockerhub') {
-              ossImage.push()
+              if (params.JET_VERSION.contains("SNAPSHOT")) {
+                // Pushes latest-snapshot
+                ossImage.push()
+              } else {
+                // Both version and latest tags point to same image
+                ossImage.push(ossRegistry + ":" + params.JET_VERSION)
+                if (params.UPDATE_LATEST) {
+                  ossImage.push(ossRegistry + ":latest")
+                }
+              }
             } 
           }
         }
@@ -26,7 +35,7 @@ pipeline {
     stage('Building the Enterprise image') {
         steps{
           script {
-            enterpriseImage = docker.build(enterpriseRegistry + ":latest", "--force-rm --no-cache ./hazelcast-jet-enterprise" )
+            enterpriseImage = docker.build(enterpriseRegistry + ":latest-snapshot", "--force-rm --no-cache --build-arg JET_VERSION=$JET_VERSION ./hazelcast-jet-enterprise" )
           }
         }
       }
@@ -34,8 +43,17 @@ pipeline {
         steps{
           script {
             docker.withRegistry('', 'devopshazelcast-dockerhub') {
-              enterpriseImage.push()
-            } 
+              if (params.JET_VERSION.contains("SNAPSHOT")) {
+                // Pushes latest-snapshot
+                enterpriseImage.push()
+              } else {
+                // Both version and latest tags point to same image
+                enterpriseImage.push(enterpriseRegistry + ":" + params.JET_VERSION)
+                if (params.UPDATE_LATEST) {
+                  enterpriseImage.push(enterpriseRegistry + ":latest")
+                }
+              }
+            }
           }
         }
       }
