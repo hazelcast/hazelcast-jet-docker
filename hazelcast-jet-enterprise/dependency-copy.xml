@@ -17,6 +17,16 @@
                 <updatePolicy>daily</updatePolicy>
             </snapshots>
         </repository>
+        <repository>
+            <id>private-repository</id>
+            <name>Hazelcast Private Repository</name>
+            <url>https://repository.hazelcast.com/release/</url>
+        </repository>
+        <repository>
+            <id>private-snapshot-repository</id>
+            <name>Hazelcast Private Repository</name>
+            <url>https://repository.hazelcast.com/snapshot/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -36,11 +46,6 @@
             <artifactId>cache-api</artifactId>
             <version>${jcache-version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.prometheus.jmx</groupId>
-            <artifactId>jmx_prometheus_javaagent</artifactId>
-            <version>${prometheus-java-version}</version>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -50,41 +55,20 @@
                 <version>3.1.1</version>
                 <configuration>
                     <outputDirectory>
-                        ${env.JET_HOME}/hazelcast-jet-${hazelcast-jet-version}/lib
+                        ${project.basedir}/hazelcast-jet-enterprise-${hazelcast-jet-version}/lib
                     </outputDirectory>
                     <artifactItems>
                         <artifactItem>
                             <groupId>com.hazelcast.jet</groupId>
-                            <artifactId>hazelcast-jet-distribution</artifactId>
+                            <artifactId>hazelcast-jet-enterprise-distribution</artifactId>
                             <version>${hazelcast-jet-version}</version>
                             <type>zip</type>
-                            <outputDirectory>${env.JET_HOME}</outputDirectory>
+                            <outputDirectory>${project.basedir}</outputDirectory>
                             <includes>
-                                hazelcast-jet-${hazelcast-jet-version}/bin/
-                            </includes>
-                            <excludes>META-INF/</excludes>
-                            <overWrite>true</overWrite>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>com.hazelcast.jet</groupId>
-                            <artifactId>hazelcast-jet-distribution</artifactId>
-                            <version>${hazelcast-jet-version}</version>
-                            <type>zip</type>
-                            <outputDirectory>${env.JET_HOME}</outputDirectory>
-                            <includes>
-                                hazelcast-jet-${hazelcast-jet-version}/lib/
-                            </includes>
-                            <excludes>META-INF/</excludes>
-                            <overWrite>true</overWrite>
-                        </artifactItem>
-                        <artifactItem>
-                            <groupId>com.hazelcast.jet</groupId>
-                            <artifactId>hazelcast-jet-distribution</artifactId>
-                            <version>${hazelcast-jet-version}</version>
-                            <type>zip</type>
-                            <outputDirectory>${env.JET_HOME}</outputDirectory>
-                            <includes>
-                                hazelcast-jet-${hazelcast-jet-version}/config/
+                                hazelcast-jet-enterprise-${hazelcast-jet-version}/bin/,
+                                hazelcast-jet-enterprise-${hazelcast-jet-version}/lib/,
+                                hazelcast-jet-enterprise-${hazelcast-jet-version}/config/,
+                                hazelcast-jet-enterprise-${hazelcast-jet-version}/opt/
                             </includes>
                             <excludes>META-INF/</excludes>
                             <overWrite>true</overWrite>
