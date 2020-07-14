@@ -10,7 +10,7 @@ pipeline {
     stage('Building the OSS image') {
         steps{
           script {
-            ossImage = docker.build(ossRegistry + ":latest-snapshot", "--force-rm --no-cache --build-arg JET_VERSION=$JET_VERSION ./hazelcast-jet-oss" )
+            ossImage = docker.build(ossRegistry + ":current", "--force-rm --no-cache --build-arg JET_VERSION=$JET_VERSION ./hazelcast-jet-oss" )
           }
         }
       }
@@ -20,12 +20,12 @@ pipeline {
             docker.withRegistry('', 'devopshazelcast-dockerhub') {
               if (params.JET_VERSION.contains("SNAPSHOT")) {
                 // Pushes latest-snapshot
-                ossImage.push()
+                ossImage.push("latest-snapshot")
               } else {
                 // Both version and latest tags point to same image
-                ossImage.push(ossRegistry + ":" + params.JET_VERSION)
+                ossImage.push(params.JET_VERSION)
                 if (params.UPDATE_LATEST) {
-                  ossImage.push(ossRegistry + ":latest")
+                  ossImage.push("latest")
                 }
               }
             } 
@@ -35,7 +35,7 @@ pipeline {
     stage('Building the Enterprise image') {
         steps{
           script {
-            enterpriseImage = docker.build(enterpriseRegistry + ":latest-snapshot", "--force-rm --no-cache --build-arg JET_VERSION=$JET_VERSION ./hazelcast-jet-enterprise" )
+            enterpriseImage = docker.build(enterpriseRegistry + ":current", "--force-rm --no-cache --build-arg JET_VERSION=$JET_VERSION ./hazelcast-jet-enterprise" )
           }
         }
       }
@@ -45,12 +45,12 @@ pipeline {
             docker.withRegistry('', 'devopshazelcast-dockerhub') {
               if (params.JET_VERSION.contains("SNAPSHOT")) {
                 // Pushes latest-snapshot
-                enterpriseImage.push()
+                enterpriseImage.push("latest-snapshot")
               } else {
                 // Both version and latest tags point to same image
-                enterpriseImage.push(enterpriseRegistry + ":" + params.JET_VERSION)
+                enterpriseImage.push(params.JET_VERSION)
                 if (params.UPDATE_LATEST) {
-                  enterpriseImage.push(enterpriseRegistry + ":latest")
+                  enterpriseImage.push("latest")
                 }
               }
             }
