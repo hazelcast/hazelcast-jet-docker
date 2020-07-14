@@ -5,7 +5,7 @@ pipeline {
     ossImage = ''
     enterpriseImage = ''
   }
-  agent { label 'lab' }
+  agent { label 'multi-arch-docker-release' }
   stages {
     stage('Building the OSS image') {
         steps{
