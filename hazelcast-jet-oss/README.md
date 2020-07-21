@@ -38,7 +38,7 @@ Note that:
 After setting up the cluster, you can start the client application to
 check it works correctly.
 
-Please go to the [Hazelcast Jet website](https://jet-start.sh/docs/next/operations/docker)
+Please go to the [Hazelcast Jet website](https://jet-start.sh/docs/operations/docker)
 for more thorough documentation regarding the configuration, job
 submission, docker-compose and packaging.
 
