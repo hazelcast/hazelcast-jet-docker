@@ -71,7 +71,6 @@ RUN cd mvnw && \
       rm -rf $JET_HOME/hazelcast-jet-enterprise-$JET_VERSION
 
 COPY jmx_agent_config.yaml ${JET_HOME}/jmx_agent_config.yaml
-COPY hazelcast.yaml ${JET_HOME}/config/hazelcast.yaml
 COPY log4j2.properties ${JET_HOME}/config/log4j2.properties
 
 # Runtime constants
