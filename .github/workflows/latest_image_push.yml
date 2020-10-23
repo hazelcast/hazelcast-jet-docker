@@ -1,0 +1,38 @@
+name: Build latest OS and EE image
+
+on:
+  workflow_dispatch:
+    inputs:
+      JET_VERSION:
+        description: 'Version of Jet to build the image for'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          buildx-version: v0.4.1
+          qemu-version: 4.2.0-7
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build/Push OSS image
+        run: |
+          docker buildx build --push \
+            --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
+            --tag hazelcast/hazelcast-jet:latest \
+            --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
+      - name: Build/Push EE image
+        run: |
+          docker buildx build --push \
+            --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
+            --tag hazelcast/hazelcast-jet-enterprise:latest \
+            --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
