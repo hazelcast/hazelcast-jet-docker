@@ -11,12 +11,20 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set Release Version
-        run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF:11}
+        run: echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
       - name: Print Release Version
         run: |
           echo ${{ env.RELEASE_VERSION }}
+
+      - name: Check if latest tag should be pushed
+        run: echo "PUSH_LATEST=$([[ $(git tag --list "v*" | sort | tail -n 1) = "${GITHUB_REF:10}" ]] && echo yes || echo no)" >> $GITHUB_ENV
+      - name: Print Push Latest
+        run: |
+          echo ${{ env.PUSH_LATEST }}
 
       - name: Set up Docker Buildx
         id: buildx
@@ -30,11 +38,26 @@ jobs:
 
       - name: Build/Push OSS image
         run: |
-          docker buildx build --push \
-            --tag hazelcast/hazelcast-jet:${{ env.RELEASE_VERSION }} \
-            --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
+          if [[ "${{ env.PUSH_LATEST }}" == "yes" ]]; then
+            docker buildx build --push \
+              --tag hazelcast/hazelcast-jet:${{ env.RELEASE_VERSION }} \
+              --tag hazelcast/hazelcast-jet:latest \
+              --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
+          else
+            docker buildx build --push \
+              --tag hazelcast/hazelcast-jet:${{ env.RELEASE_VERSION }} \
+              --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
+          fi
+
       - name: Build/Push EE image
         run: |
-          docker buildx build --push \
-            --tag hazelcast/hazelcast-jet-enterprise:${{ env.RELEASE_VERSION }} \
-            --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
+          if [[ "${{ env.PUSH_LATEST }}" == "yes" ]]; then
+            docker buildx build --push \
+              --tag hazelcast/hazelcast-jet-enterprise:${{ env.RELEASE_VERSION }} \
+              --tag hazelcast/hazelcast-jet-enterprise:latest \
+              --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
+          else
+            docker buildx build --push \
+              --tag hazelcast/hazelcast-jet-enterprise:${{ env.RELEASE_VERSION }} \
+              --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
+          fi
