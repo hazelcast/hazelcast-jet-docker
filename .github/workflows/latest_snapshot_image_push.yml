@@ -1,4 +1,4 @@
-name: Build latest OS and EE image
+name: Build latest-snapshot OS and EE image
 
 on:
   workflow_dispatch:
@@ -28,11 +28,11 @@ jobs:
         run: |
           docker buildx build --push \
             --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-            --tag hazelcast/hazelcast-jet:latest \
+            --tag hazelcast/hazelcast-jet:latest-snapshot \
             --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
       - name: Build/Push EE image
         run: |
           docker buildx build --push \
             --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-            --tag hazelcast/hazelcast-jet-enterprise:latest \
+            --tag hazelcast/hazelcast-jet-enterprise:latest-snapshot \
             --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
