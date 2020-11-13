@@ -57,6 +57,7 @@ RUN cd mvnw && \
       -Dhazelcast-eureka-version=${HZ_EUREKA_VERSION} \
       -Dhazelcast-jet-version=${JET_VERSION} \
       -Djcache-version=${CACHE_API_VERSION} \
+      -Dmaven.wagon.http.retryHandler.count=3 \
       dependency:copy-dependencies \
       dependency:unpack && \
       cd .. && \

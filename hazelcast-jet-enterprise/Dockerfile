@@ -18,6 +18,7 @@ RUN mvn -f dependency-copy.xml \
       -Dhazelcast-eureka-version=${HZ_EUREKA_VERSION} \
       -Dhazelcast-jet-version=${JET_VERSION} \
       -Djcache-version=${CACHE_API_VERSION} \
+      -Dmaven.wagon.http.retryHandler.count=3 \
       dependency:copy-dependencies \
       dependency:unpack && \
       mv hazelcast-jet-enterprise-${JET_VERSION} hazelcast-jet-enterprise && \
