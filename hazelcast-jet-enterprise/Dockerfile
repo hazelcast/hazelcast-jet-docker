@@ -7,21 +7,23 @@ WORKDIR /tmp/build
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
 ARG JET_VERSION=4.3
+# Default distribution is fat
+ARG JET_VARIANT=""
 ARG CACHE_API_VERSION=1.1.1
 ARG HZ_EUREKA_VERSION=2.0.1
-
 ADD dependency-copy.xml /tmp/build/
 
 # Download and install Hazelcast Jet and Hazelcast plugins
-#(hazelcast-eureka, jcache-api) with dependencies
+# (hazelcast-eureka, jcache-api) with dependencies
 RUN mvn -f dependency-copy.xml \
       -Dhazelcast-eureka-version=${HZ_EUREKA_VERSION} \
       -Dhazelcast-jet-version=${JET_VERSION} \
+      -Dhazelcast-jet-distribution-classifier=${JET_DISTRIBUTION_CLASSIFIER} \
       -Djcache-version=${CACHE_API_VERSION} \
       -Dmaven.wagon.http.retryHandler.count=3 \
       dependency:copy-dependencies \
       dependency:unpack && \
-      mv hazelcast-jet-enterprise-${JET_VERSION} hazelcast-jet-enterprise && \
+      mv hazelcast-jet-enterprise-${JET_VERSION}${JET_VARIANT} hazelcast-jet-enterprise && \
       chmod -R +r .
 
 ####

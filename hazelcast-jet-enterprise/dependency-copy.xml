@@ -61,14 +61,13 @@
                         <artifactItem>
                             <groupId>com.hazelcast.jet</groupId>
                             <artifactId>hazelcast-jet-enterprise-distribution</artifactId>
-                            <version>${hazelcast-jet-version}</version>
+                            <version>${hazelcast-jet-version}${hazelcast-jet-variant}</version>
                             <type>zip</type>
                             <outputDirectory>${project.basedir}</outputDirectory>
                             <includes>
-                                hazelcast-jet-enterprise-${hazelcast-jet-version}/bin/,
-                                hazelcast-jet-enterprise-${hazelcast-jet-version}/lib/,
-                                hazelcast-jet-enterprise-${hazelcast-jet-version}/config/,
-                                hazelcast-jet-enterprise-${hazelcast-jet-version}/opt/
+                                hazelcast-jet-enterprise-${hazelcast-jet-version}${hazelcast-jet-variant}/bin/,
+                                hazelcast-jet-enterprise-${hazelcast-jet-version}${hazelcast-jet-variant}/lib/,
+                                hazelcast-jet-enterprise-${hazelcast-jet-version}${hazelcast-jet-variant}/config/,
                             </includes>
                             <excludes>META-INF/</excludes>
                             <overWrite>true</overWrite>

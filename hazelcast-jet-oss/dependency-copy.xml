@@ -45,20 +45,20 @@
                 <version>3.1.1</version>
                 <configuration>
                     <outputDirectory>
-                        ${project.basedir}/hazelcast-jet-${hazelcast-jet-version}/lib
+                        ${project.basedir}/hazelcast-jet-${hazelcast-jet-version}${hazelcast-jet-variant}/lib
                     </outputDirectory>
                     <artifactItems>
                         <artifactItem>
                             <groupId>com.hazelcast.jet</groupId>
                             <artifactId>hazelcast-jet-distribution</artifactId>
-                            <version>${hazelcast-jet-version}</version>
+                            <version>${hazelcast-jet-version}${hazelcast-jet-variant}</version>
                             <type>zip</type>
                             <outputDirectory>${project.basedir}</outputDirectory>
+
                             <includes>
-                                hazelcast-jet-${hazelcast-jet-version}/bin/,
-                                hazelcast-jet-${hazelcast-jet-version}/lib/,
-                                hazelcast-jet-${hazelcast-jet-version}/config/,
-                                hazelcast-jet-${hazelcast-jet-version}/opt/
+                                hazelcast-jet-${hazelcast-jet-version}${hazelcast-jet-variant}/bin/,
+                                hazelcast-jet-${hazelcast-jet-version}${hazelcast-jet-variant}/lib/,
+                                hazelcast-jet-${hazelcast-jet-version}${hazelcast-jet-variant}/config/,
                             </includes>
                             <excludes>META-INF/</excludes>
                             <overWrite>true</overWrite>
