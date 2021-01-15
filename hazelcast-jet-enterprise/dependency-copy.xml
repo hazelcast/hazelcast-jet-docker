@@ -61,7 +61,8 @@
                         <artifactItem>
                             <groupId>com.hazelcast.jet</groupId>
                             <artifactId>hazelcast-jet-enterprise-distribution</artifactId>
-                            <version>${hazelcast-jet-version}${hazelcast-jet-variant}</version>
+                            <version>${hazelcast-jet-version}</version>
+                            <classifier>${hazelcast-jet-variant}</classifier>
                             <type>zip</type>
                             <outputDirectory>${project.basedir}</outputDirectory>
                             <includes>
