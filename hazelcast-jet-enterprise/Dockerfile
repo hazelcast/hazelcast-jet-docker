@@ -23,8 +23,8 @@ RUN mvn -f dependency-copy.xml \
       -P${JET_VARIANT} \
       dependency:copy-dependencies \
       dependency:unpack && \
-      if [ ${JET_VARIANT} == "fat" ]; then mv hazelcast-jet-${JET_VERSION} hazelcast-jet; \
-      else mv hazelcast-jet-${JET_VERSION}-${JET_VARIANT} hazelcast-jet; fi && \
+      if [ ${JET_VARIANT} = "fat" ]; then mv hazelcast-jet-enterprise-${JET_VERSION} hazelcast-jet-enterprise; \
+      else mv hazelcast-jet-enterprise-${JET_VERSION}-${JET_VARIANT} hazelcast-jet-enterprise; fi && \
       chmod -R +r .
 
 ####
