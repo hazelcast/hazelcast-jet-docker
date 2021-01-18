@@ -22,7 +22,6 @@ RUN mvn -f dependency-copy.xml \
       -Djcache-version=${CACHE_API_VERSION} \
       -Dmaven.wagon.http.retryHandler.count=3 \
       -P${JET_VARIANT} \
-      dependency:copy-dependencies \
       dependency:unpack && \
       if [ ${JET_VARIANT} = "fat" ]; then mv hazelcast-jet-${JET_VERSION} hazelcast-jet; \
       else mv hazelcast-jet-${JET_VERSION}-${JET_VARIANT} hazelcast-jet; fi && \
@@ -31,7 +30,7 @@ RUN mvn -f dependency-copy.xml \
 ####
 #### Final stage - creates final image
 ####
-FROM openjdk:11.0.7-jre-slim
+FROM openjdk:11.0-jre-slim
 
 ARG JET_HOME="/opt/hazelcast-jet"
 # Needs to be duplicated in both stages

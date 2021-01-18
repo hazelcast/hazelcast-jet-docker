@@ -30,7 +30,7 @@ RUN mvn -f dependency-copy.xml \
 ####
 #### Final stage - creates final image
 ####
-FROM openjdk:11.0.7-jre-slim
+FROM openjdk:11.0-jre-slim
 
 ARG JET_HOME="/opt/hazelcast-jet-enterprise"
 
