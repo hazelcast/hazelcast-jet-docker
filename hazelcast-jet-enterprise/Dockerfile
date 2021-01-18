@@ -18,12 +18,13 @@ ADD dependency-copy.xml /tmp/build/
 RUN mvn -f dependency-copy.xml \
       -Dhazelcast-eureka-version=${HZ_EUREKA_VERSION} \
       -Dhazelcast-jet-version=${JET_VERSION} \
-      -Dhazelcast-jet-distribution-classifier=${JET_DISTRIBUTION_CLASSIFIER} \
       -Djcache-version=${CACHE_API_VERSION} \
       -Dmaven.wagon.http.retryHandler.count=3 \
+      -P${JET_VARIANT} \
       dependency:copy-dependencies \
       dependency:unpack && \
-      mv hazelcast-jet-enterprise-${JET_VERSION}${JET_VARIANT} hazelcast-jet-enterprise && \
+      if [ ${JET_VARIANT} == "fat" ]; then mv hazelcast-jet-${JET_VERSION} hazelcast-jet; \
+      else mv hazelcast-jet-${JET_VERSION}-${JET_VARIANT} hazelcast-jet; fi && \
       chmod -R +r .
 
 ####

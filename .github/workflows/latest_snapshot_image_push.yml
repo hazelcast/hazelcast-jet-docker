@@ -28,7 +28,7 @@ jobs:
         run: |
           docker buildx build --push \
             --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-            --build-arg JET_VARIANT="-slim" \
+            --build-arg JET_VARIANT="slim" \
             --tag hazelcast/hazelcast-jet:latest-snapshot-slim \
             --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
 
@@ -36,6 +36,7 @@ jobs:
           run: |
             docker buildx build --push \
               --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
+              --build-arg JET_VARIANT="fat" \
               --tag hazelcast/hazelcast-jet:latest-snapshot \
               --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
 
@@ -43,7 +44,7 @@ jobs:
         run: |
           docker buildx build --push \
             --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-            --build-arg JET_VARIANT="-slim" \
+            --build-arg JET_VARIANT="slim" \
             --tag hazelcast/hazelcast-jet-enterprise:latest-snapshot-slim \
             --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
 
@@ -51,5 +52,6 @@ jobs:
           run: |
             docker buildx build --push \
               --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
+              --build-arg JET_VARIANT="fat" \
               --tag hazelcast/hazelcast-jet-enterprise:latest-snapshot \
               --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise

@@ -55,11 +55,13 @@ jobs:
           run: |
             if [[ "${{ env.PUSH_LATEST }}" == "yes" ]]; then
               docker buildx build --push \
+                --build-arg JET_VARIANT="fat" \
                 --tag hazelcast/hazelcast-jet:${{ env.RELEASE_VERSION }} \
                 --tag hazelcast/hazelcast-jet:latest \
                 --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
             else
               docker buildx build --push \
+                --build-arg JET_VARIANT="fat" \
                 --tag hazelcast/hazelcast-jet:${{ env.RELEASE_VERSION }} \
                 --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
             fi
@@ -68,13 +70,13 @@ jobs:
         run: |
           if [[ "${{ env.PUSH_LATEST }}" == "yes" ]]; then
             docker buildx build --push \
-              --build-arg JET_VARIANT="-slim" \
+              --build-arg JET_VARIANT="slim" \
               --tag hazelcast/hazelcast-jet-enterprise:${{ env.RELEASE_VERSION }}-slim \
               --tag hazelcast/hazelcast-jet-enterprise:latest-slim \
               --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
           else
             docker buildx build --push \
-              --build-arg JET_VARIANT="-slim" \
+              --build-arg JET_VARIANT="slim" \
               --tag hazelcast/hazelcast-jet-enterprise:${{ env.RELEASE_VERSION }}-slim \
               --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
           fi
@@ -83,11 +85,13 @@ jobs:
           run: |
             if [[ "${{ env.PUSH_LATEST }}" == "yes" ]]; then
               docker buildx build --push \
+                --build-arg JET_VARIANT="fat" \
                 --tag hazelcast/hazelcast-jet-enterprise:${{ env.RELEASE_VERSION }} \
                 --tag hazelcast/hazelcast-jet-enterprise:latest \
                 --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
             else
               docker buildx build --push \
+                --build-arg JET_VARIANT="fat" \
                 --tag hazelcast/hazelcast-jet-enterprise:${{ env.RELEASE_VERSION }} \
                 --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
             fi
