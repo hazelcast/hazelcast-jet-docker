@@ -7,10 +7,11 @@ WORKDIR /tmp/build
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
 ARG JET_VERSION=4.3
-# Default distribution is fat
-ARG JET_VARIANT=""
+# Default distribution is full
+ARG JET_VARIANT="full"
 ARG CACHE_API_VERSION=1.1.1
 ARG HZ_EUREKA_VERSION=2.0.1
+
 ADD dependency-copy.xml /tmp/build/
 
 # Download and install Hazelcast Jet and Hazelcast plugins
@@ -23,8 +24,7 @@ RUN mvn -f dependency-copy.xml \
       -P${JET_VARIANT} \
       dependency:copy-dependencies \
       dependency:unpack && \
-      if [ ${JET_VARIANT} = "fat" ]; then mv hazelcast-jet-enterprise-${JET_VERSION} hazelcast-jet-enterprise; \
-      else mv hazelcast-jet-enterprise-${JET_VERSION}-${JET_VARIANT} hazelcast-jet-enterprise; fi && \
+      mv hazelcast-jet-enterprise-${JET_VERSION}* hazelcast-jet-enterprise && \
       chmod -R +r .
 
 ####

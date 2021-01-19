@@ -7,8 +7,8 @@ WORKDIR /tmp/build
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
 ARG JET_VERSION=4.3
-# Default distribution is fat
-ARG JET_VARIANT=""
+# Default distribution is full
+ARG JET_VARIANT="full"
 ARG CACHE_API_VERSION=1.1.1
 ARG HZ_EUREKA_VERSION=2.0.1
 
@@ -22,9 +22,9 @@ RUN mvn -f dependency-copy.xml \
       -Djcache-version=${CACHE_API_VERSION} \
       -Dmaven.wagon.http.retryHandler.count=3 \
       -P${JET_VARIANT} \
+      dependency:copy-dependencies \
       dependency:unpack && \
-      if [ ${JET_VARIANT} = "fat" ]; then mv hazelcast-jet-${JET_VERSION} hazelcast-jet; \
-      else mv hazelcast-jet-${JET_VERSION}-${JET_VARIANT} hazelcast-jet; fi && \
+      mv hazelcast-jet-${JET_VERSION}* hazelcast-jet && \
       chmod -R +r .
 
 ####

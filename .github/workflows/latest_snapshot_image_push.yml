@@ -32,13 +32,13 @@ jobs:
             --tag hazelcast/hazelcast-jet:latest-snapshot-slim \
             --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
 
-      - name: Build/Push Fat OSS image
-          run: |
-            docker buildx build --push \
-              --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-              --build-arg JET_VARIANT="fat" \
-              --tag hazelcast/hazelcast-jet:latest-snapshot \
-              --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
+      - name: Build/Push Full OSS image
+        run: |
+          docker buildx build --push \
+            --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
+            --build-arg JET_VARIANT="full" \
+            --tag hazelcast/hazelcast-jet:latest-snapshot \
+            --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
 
       - name: Build/Push Slim EE image
         run: |
@@ -48,10 +48,10 @@ jobs:
             --tag hazelcast/hazelcast-jet-enterprise:latest-snapshot-slim \
             --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
 
-      - name: Build/Push Fat EE image
-          run: |
-            docker buildx build --push \
-              --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-              --build-arg JET_VARIANT="fat" \
-              --tag hazelcast/hazelcast-jet-enterprise:latest-snapshot \
-              --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
+      - name: Build/Push Full EE image
+        run: |
+          docker buildx build --push \
+            --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
+            --build-arg JET_VARIANT="full" \
+            --tag hazelcast/hazelcast-jet-enterprise:latest-snapshot \
+            --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
