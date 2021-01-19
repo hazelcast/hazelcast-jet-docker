@@ -22,6 +22,7 @@ RUN mvn -f dependency-copy.xml \
       -Djcache-version=${CACHE_API_VERSION} \
       -Dmaven.wagon.http.retryHandler.count=3 \
       -P${JET_VARIANT} \
+      enforcer:enforce \
       dependency:copy-dependencies \
       dependency:unpack && \
       mv hazelcast-jet-enterprise-${JET_VERSION}* hazelcast-jet-enterprise && \
