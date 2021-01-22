@@ -73,6 +73,12 @@
             <version>${hazelcast-jet-version}</version>
             <type>pom</type>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.hazelcast.jet.examples</groupId>
+                    <artifactId>hazelcast-jet-examples-hello-world</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <build>
