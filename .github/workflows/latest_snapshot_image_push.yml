@@ -9,6 +9,14 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        type:
+          - folder: hazelcast-jet-oss
+            image: hazelcast-jet
+          - folder: hazelcast-jet-enterprise
+            image: hazelcast-jet-enterprise
+        variant: [slim, full]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -24,34 +32,10 @@ jobs:
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build/Push Slim OSS image
+      - name: Build/Push ${{ matrix.type }} ${{ matrix.variant }}  image
         run: |
           docker buildx build --push \
             --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-            --build-arg JET_VARIANT="slim" \
-            --tag hazelcast/hazelcast-jet:latest-snapshot-slim \
-            --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
-
-      - name: Build/Push Full OSS image
-        run: |
-          docker buildx build --push \
-            --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-            --build-arg JET_VARIANT="full" \
-            --tag hazelcast/hazelcast-jet:latest-snapshot \
-            --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
-
-      - name: Build/Push Slim EE image
-        run: |
-          docker buildx build --push \
-            --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-            --build-arg JET_VARIANT="slim" \
-            --tag hazelcast/hazelcast-jet-enterprise:latest-snapshot-slim \
-            --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
-
-      - name: Build/Push Full EE image
-        run: |
-          docker buildx build --push \
-            --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-            --build-arg JET_VARIANT="full" \
-            --tag hazelcast/hazelcast-jet-enterprise:latest-snapshot \
-            --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
+            --build-arg JET_VARIANT="${{ matrix.variant }}" \
+            --tag hazelcast/${{ matrix.type.image }}:latest-snapshot \
+            --platform=linux/arm64,linux/amd64 ${{ matrix.type.folder }}
