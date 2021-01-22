@@ -16,7 +16,7 @@ ADD dependency-copy.xml /tmp/build/
 
 # Download and install Hazelcast Jet and Hazelcast plugins
 # (hazelcast-eureka, jcache-api) with dependencies
-RUN mvn -f dependency-copy.xml \
+RUN mvn --batch-mode --file dependency-copy.xml \
       -Dhazelcast-eureka-version=${HZ_EUREKA_VERSION} \
       -Dhazelcast-jet-version=${JET_VERSION} \
       -Djcache-version=${CACHE_API_VERSION} \
