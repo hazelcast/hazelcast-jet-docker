@@ -14,7 +14,11 @@ jobs:
             image: hazelcast-jet
           - folder: hazelcast-jet-enterprise
             image: hazelcast-jet-enterprise
-        variant: [ slim, full ]
+        variant:
+          - name: slim
+            suffix: -slim
+          - name: full
+            suffix: ''
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -44,19 +48,19 @@ jobs:
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build/Push ${{ matrix.type }} ${{ matrix.variant }}  image
+      - name: Build/Push ${{ matrix.type }} ${{ matrix.variant.name }}  image
         run: |
           if [[ "${{ env.PUSH_LATEST }}" == "yes" ]]; then
             docker buildx build --push \
               --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-              --build-arg JET_VARIANT="${{ matrix.variant }}" \
-              --tag hazelcast/${{ matrix.type.image }}:${{ env.RELEASE_VERSION }} \
-              --tag hazelcast/${{ matrix.type.image }}:latest \
+              --build-arg JET_VARIANT="${{ matrix.variant.name }}" \
+              --tag hazelcast/${{ matrix.type.image }}:${{ env.RELEASE_VERSION }}${{ matrix.variant.suffix }} \
+              --tag hazelcast/${{ matrix.type.image }}:latest${{ matrix.variant.suffix }} \
               --platform=linux/arm64,linux/amd64 ${{ matrix.type.folder }}
           else
             docker buildx build --push \
               --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-              --build-arg JET_VARIANT="${{ matrix.variant }}" \
-              --tag hazelcast/${{ matrix.type.image }}:${{ env.RELEASE_VERSION }} \
+              --build-arg JET_VARIANT="${{ matrix.variant.name }}" \
+              --tag hazelcast/${{ matrix.type.image }}:${{ env.RELEASE_VERSION }}${{ matrix.variant.suffix }} \
               --platform=linux/arm64,linux/amd64 ${{ matrix.type.folder }}
           fi

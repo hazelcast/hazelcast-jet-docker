@@ -16,7 +16,11 @@ jobs:
             image: hazelcast-jet
           - folder: hazelcast-jet-enterprise
             image: hazelcast-jet-enterprise
-        variant: [slim, full]
+        variant:
+          - name: slim
+            suffix: -slim
+          - name: full
+            suffix: ''
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -32,10 +36,10 @@ jobs:
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build/Push ${{ matrix.type }} ${{ matrix.variant }}  image
+      - name: Build/Push ${{ matrix.type }} ${{ matrix.variant.name }}  image
         run: |
           docker buildx build --push \
             --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-            --build-arg JET_VARIANT="${{ matrix.variant }}" \
-            --tag hazelcast/${{ matrix.type.image }}:latest-snapshot \
+            --build-arg JET_VARIANT="${{ matrix.variant.name }}" \
+            --tag hazelcast/${{ matrix.type.image }}:latest-snapshot${{ matrix.variant.suffix }} \
             --platform=linux/arm64,linux/amd64 ${{ matrix.type.folder }}
