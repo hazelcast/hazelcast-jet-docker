@@ -9,30 +9,37 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        type:
+          - folder: hazelcast-jet-oss
+            image: hazelcast-jet
+          - folder: hazelcast-jet-enterprise
+            image: hazelcast-jet-enterprise
+        variant:
+          - name: slim
+            suffix: -slim
+          - name: full
+            suffix: ''
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      # https://github.com/docker/setup-qemu-action
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      # https://github.com/docker/setup-buildx-action
       - name: Set up Docker Buildx
-        id: buildx
-        uses: crazy-max/ghaction-docker-buildx@v1
-        with:
-          buildx-version: v0.4.1
-          qemu-version: 4.2.0-7
+        uses: docker/setup-buildx-action@v1
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build/Push OSS image
+      - name: Build/Push ${{ matrix.type }} ${{ matrix.variant.name }}  image
         run: |
           docker buildx build --push \
             --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-            --tag hazelcast/hazelcast-jet:latest-snapshot \
-            --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
-      - name: Build/Push EE image
-        run: |
-          docker buildx build --push \
-            --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
-            --tag hazelcast/hazelcast-jet-enterprise:latest-snapshot \
-            --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
+            --build-arg JET_VARIANT="${{ matrix.variant.name }}" \
+            --tag hazelcast/${{ matrix.type.image }}:latest-snapshot${{ matrix.variant.suffix }} \
+            --platform=linux/arm64,linux/amd64 ${{ matrix.type.folder }}

@@ -7,6 +7,18 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        type:
+          - folder: hazelcast-jet-oss
+            image: hazelcast-jet
+          - folder: hazelcast-jet-enterprise
+            image: hazelcast-jet-enterprise
+        variant:
+          - name: slim
+            suffix: -slim
+          - name: full
+            suffix: ''
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -36,28 +48,19 @@ jobs:
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build/Push OSS image
+      - name: Build/Push ${{ matrix.type }} ${{ matrix.variant.name }}  image
         run: |
           if [[ "${{ env.PUSH_LATEST }}" == "yes" ]]; then
             docker buildx build --push \
-              --tag hazelcast/hazelcast-jet:${{ env.RELEASE_VERSION }} \
-              --tag hazelcast/hazelcast-jet:latest \
-              --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
+              --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
+              --build-arg JET_VARIANT="${{ matrix.variant.name }}" \
+              --tag hazelcast/${{ matrix.type.image }}:${{ env.RELEASE_VERSION }}${{ matrix.variant.suffix }} \
+              --tag hazelcast/${{ matrix.type.image }}:latest${{ matrix.variant.suffix }} \
+              --platform=linux/arm64,linux/amd64 ${{ matrix.type.folder }}
           else
             docker buildx build --push \
-              --tag hazelcast/hazelcast-jet:${{ env.RELEASE_VERSION }} \
-              --platform=linux/arm64,linux/amd64 hazelcast-jet-oss
-          fi
-
-      - name: Build/Push EE image
-        run: |
-          if [[ "${{ env.PUSH_LATEST }}" == "yes" ]]; then
-            docker buildx build --push \
-              --tag hazelcast/hazelcast-jet-enterprise:${{ env.RELEASE_VERSION }} \
-              --tag hazelcast/hazelcast-jet-enterprise:latest \
-              --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
-          else
-            docker buildx build --push \
-              --tag hazelcast/hazelcast-jet-enterprise:${{ env.RELEASE_VERSION }} \
-              --platform=linux/arm64,linux/amd64 hazelcast-jet-enterprise
+              --build-arg JET_VERSION=${{ github.event.inputs.JET_VERSION }} \
+              --build-arg JET_VARIANT="${{ matrix.variant.name }}" \
+              --tag hazelcast/${{ matrix.type.image }}:${{ env.RELEASE_VERSION }}${{ matrix.variant.suffix }} \
+              --platform=linux/arm64,linux/amd64 ${{ matrix.type.folder }}
           fi
