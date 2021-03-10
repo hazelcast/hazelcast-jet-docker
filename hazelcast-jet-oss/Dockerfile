@@ -6,7 +6,7 @@ FROM maven:3.6-openjdk-11
 WORKDIR /tmp/build
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
-ARG JET_VERSION=4.3
+ARG JET_VERSION=4.3.1
 ARG CACHE_API_VERSION=1.1.1
 ARG HZ_EUREKA_VERSION=2.0.1
 
