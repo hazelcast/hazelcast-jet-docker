@@ -6,7 +6,7 @@ FROM maven:3.6-openjdk-11
 WORKDIR /tmp/build
 
 # Versions of Hazelcast Jet and Hazelcast IMDG plugins
-ARG JET_VERSION=4.5.1
+ARG JET_VERSION=4.5.2
 # Default distribution is full
 ARG JET_VARIANT="full"
 ARG CACHE_API_VERSION=1.1.1
