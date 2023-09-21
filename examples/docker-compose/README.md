@@ -1,6 +1,6 @@
 # Hazelcast Jet Docker Compose Code Sample
 
-In this code sample we will show that you can easily deploy Hazelcast Jet cluster inside Docker environment with Docker Compose.
+In this code sample we will show that you can easily deploy Hazelcast Jet cluster inside the Docker environment with Docker Compose.
 
 The Docker Compose file (`hazelcast.yml`) contains two services `hazelcast-jet` and `hazelcast-jet-submit` respectively. Those services are using both official Hazelcast Jet Docker Images from Docker Hub.
 
@@ -10,7 +10,7 @@ The Docker Compose file (`hazelcast.yml`) contains two services `hazelcast-jet` 
 We will use `TradingVolume` code sample to show the details of packaging it into fat-jar and submitting it to the Hazelcast Jet Cluster. More information about the `TradingVolume` code sample can be found on [Rolling Aggregation](./src/main/java/TradingVolume.java).
 
 ## Directory Level Structure
-At the highest level, the source code is organized into following directories
+At the highest level, the source code is organized into the following directories
 
 |         Directory         | Description                                                                                                                                                                     |
 |:-------------------------:|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -67,7 +67,7 @@ For Hazelcast Jet Cluster
 make logServer
 ```
 
-For Hazelast Jet Bootstrap Application
+For Hazelcast Jet Bootstrap Application
 
 ```
 make logClient
